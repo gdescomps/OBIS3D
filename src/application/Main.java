@@ -28,6 +28,7 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("halo");
 	}
 	
 	public static void main(String[] args) {
