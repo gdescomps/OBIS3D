@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import model.Model;
+import model.ApiResquester;
 
 class ModelTests {
 
@@ -15,7 +16,6 @@ class ModelTests {
 		Model model = new Model();
 		
 		assertEquals("Hello World", model.helloWorld());
-		
 	}
 	
 	@Test
