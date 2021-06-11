@@ -71,9 +71,9 @@ public class ApiResquester {
 			throw new Exception("Précision 0 non valide");
 		}
 		JSONObject jsonOccurence = new JSONObject();
-		String newUrlString = species.replaceAll(" ", "%20");
+		String newSpecies = species.replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newUrlString);
+			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -82,12 +82,12 @@ public class ApiResquester {
 	
 	//Récupérer le nombre de signalement par région pour un nom d’espèce et entre deux dates passé en paramètre
 	//Ex: https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23
-	public static JSONObject getOccurrences(String name, int precision, LocalDateTime beginDate, Period interval, int intervalCount) {
+	public static JSONObject getOccurrences(String species, int precision, LocalDateTime beginDate, Period interval, int intervalCount) {
 		LocalDateTime endDate = beginDate.plus(interval);
 		JSONObject jsonOccurence = new JSONObject();	
-		String newUrlString = name.replaceAll(" ", "%20");
+		String newSpecies = species.replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newUrlString+"&startdate="+ beginDate.toLocalDate() +"&enddate="+endDate.toLocalDate());
+			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies+"&startdate="+ beginDate.toLocalDate() +"&enddate="+endDate.toLocalDate());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -115,15 +115,16 @@ public class ApiResquester {
 	
 	//Récupérer les 20 premiers noms scientifiques d’espèce commençant par une chaîne de caractères passée en paramètre
 	//Ex: https://api.obis.org/v3/taxon/complete/verbose/ma
-	public static JSONObject getOccurrences(String chaine) {
+	public static JSONObject getOccurrences(String string) {
 		JSONObject jsonOccurence = new JSONObject();	
-		JSONArray ja = new JSONArray();
+		JSONArray jsonArrayOccurence = new JSONArray();
+		String newString = string.replaceAll(" ", "%20");
 		try {
-			ja= readJsonArrayFromUrl("https://api.obis.org/v3/taxon/complete/verbose/"+chaine);
+			jsonArrayOccurence= readJsonArrayFromUrl("https://api.obis.org/v3/taxon/complete/verbose/"+newString);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		jsonOccurence.put("search",ja);
+		jsonOccurence.put("search",jsonArrayOccurence);
 		return jsonOccurence;
 	}
 	
