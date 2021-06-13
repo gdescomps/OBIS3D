@@ -84,6 +84,7 @@ class ModelTests {
 	}
 	*/
 	
+	/*
 	@Test
 	@DisplayName("Test getOccurrences of the first 20 names")
 	void testOccurrencesOf20firstNames() {
@@ -103,6 +104,7 @@ class ModelTests {
 		}
 		assertTrue(notFailed);
 	}
+	*/
 
 	@Test
 	@DisplayName("Fail Test")

@@ -5,7 +5,7 @@ module OBIS3D {
 	requires org.json;
 	requires java.net.http;
 	//requires jsonassert;
-   
+   	requires java.desktop;
 	opens application to javafx.graphics, javafx.fxml;
 }
 

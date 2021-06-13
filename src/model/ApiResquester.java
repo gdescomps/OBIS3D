@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.concurrent.TimeUnit;
 
-public class ApiResquester {
+public abstract class ApiResquester {
 
 	public static JSONObject readJsonFromUrl(String url) {
 		String json = "";
@@ -82,7 +82,7 @@ public class ApiResquester {
 	
 	//Récupérer le nombre de signalement par région pour un nom d’espèce et entre deux dates passé en paramètre
 	//Ex: https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23
-	public static JSONObject getOccurrences(String species, int precision, LocalDateTime beginDate, Period interval, int intervalCount) {
+	public static  JSONObject getOccurrences(String species, int precision, LocalDateTime beginDate, Period interval, int intervalCount) {
 		LocalDateTime endDate = beginDate.plus(interval);
 		JSONObject jsonOccurence = new JSONObject();	
 		String newSpecies = species.replaceAll(" ", "%20");
@@ -113,9 +113,35 @@ public class ApiResquester {
 		return jsonOccurence;
 	}
 	
-	//Récupérer les 20 premiers noms scientifiques d’espèce commençant par une chaîne de caractères passée en paramètre
-	//Ex: https://api.obis.org/v3/taxon/complete/verbose/ma
-	public static JSONObject getOccurrences(String string) {
+
+	/**
+	 * Récupérer le nombre de signalement par région pour un nom d’espèce passé en paramètre 
+	 * Ex: https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae
+	 * @throws Exception 
+	 */
+	public static JSONObject getExhaustiveReport(Species species, int precision) throws Exception {
+		if(species.getScientificName()=="") {
+			throw new Exception("Nom de l'espèce non renseigné");
+		}
+		else if(precision==0) {
+			throw new Exception("Précision 0 non valide");
+		}
+		JSONObject jsonOccurence = new JSONObject();
+//		String newSpecies = species.getScientificName().replaceAll(" ", "%20");
+		try {
+			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+species.getScientificName());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return jsonOccurence;
+	}
+	
+	
+	/**
+	 * Récupérer les 20 premiers noms scientifiques d’espèce commençant par une chaîne de caractères passée en paramètre
+	 * Ex: https://api.obis.org/v3/taxon/complete/verbose/ma
+	 */
+	public static  JSONObject getSpeciesNames(String string) {
 		JSONObject jsonOccurence = new JSONObject();	
 		JSONArray jsonArrayOccurence = new JSONArray();
 		String newString = string.replaceAll(" ", "%20");
@@ -129,25 +155,14 @@ public class ApiResquester {
 	}
 	
 	
-	//Ex: https://api.obis.org/v3/taxon/morus 
-	public static JSONObject getSpeciesNames(String nameStart) {
+	/**
+	 * Ex: https://api.obis.org/v3/taxon/morus 
+	 */
+	public static  JSONObject getSpecies(String nameStart) {
 		JSONObject jsonOccurence = new JSONObject();	
 		String newNameStart = nameStart.replaceAll(" ", "%20");
 		try {
 			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/taxon/"+newNameStart);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return jsonOccurence;
-	}
-	
-	//Ex: https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus
-	public static JSONObject getSpecies(String speciesScientificName) {
-		JSONObject jsonOccurence = new JSONObject();	
-		String newSpeciesScientificName = speciesScientificName.replaceAll(" ", "%20");
-		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname="+newSpeciesScientificName);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -195,9 +210,14 @@ public class ApiResquester {
 		*/
 		
 		//Test getSpecies
-		System.out.println(getSpecies("morus bassanus"));
-		System.out.println(getSpecies("mr"));
-		System.out.println(getSpeciesNames("morus bassanus"));
+	
+	
+//		System.out.println(getSpecies("morus bassanus"));
+		Species species =new Species("Delphinidae");
+		System.out.println(getOccurrences(species.getScientificName(), 3));
+//		System.out.println(getSpecies("mr"));
+//		System.out.println(getSpeciesNames("aa"));
+		
 
 	}
 }

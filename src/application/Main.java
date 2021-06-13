@@ -1,8 +1,12 @@
 package application;
 	
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import controller.Controller;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.ApiResquester;
 import model.Model;
 import view.View;
 import javafx.scene.Scene;
@@ -29,10 +33,13 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("hello world");
+
+		System.out.println("halo");
 	}
 	
 	public static void main(String[] args) {
-		launch(args);
+		
 	}
+		
 }
+
