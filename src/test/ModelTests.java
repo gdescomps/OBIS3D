@@ -27,60 +27,66 @@ class ModelTests {
 
 		assertEquals("Hello World", model.helloWorld());
 	}
-
 	
-	/*
+	
 	@Test
 	@DisplayName("Test getOccurrences per region for a species name passed in parameter")
 	void testOccurencesOfSpeciesInRegion() throws Exception {
 		
-		//assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/1?scientificname=Morus%20Bassanus"), ApiResquester.getOccurrences("Morus Bassanus",1));
-		//JSONAssert.assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/1?scientificname=Morus%20Bassanus"), ApiResquester.getOccurrences("Morus Bassanus",1), false);
-		if(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/1?scientificname=Morus%20Bassanus").equals(ApiResquester.getOccurrences("Morus Bassanus",1))) {
-			System.out.println("oui");
-		}else{
-			System.out.println("non");
-		};
+		//test of https://api.obis.org/v3/occurrence/grid/1?scientificname=Morus%20Bassanus
+		JSONObject jsonOccurence = ApiResquester.getOccurrences("Morus bassanus",1); //test name with space	
+		JSONArray resultatRecherche = jsonOccurence.getJSONArray("features");
+		JSONObject article = resultatRecherche.getJSONObject(0); //the first element
+		 assertEquals(article.getString("type"),"Feature");
 		
-	}
-	*/
-	
-	/*
-	@Test
-	@DisplayName("Test getOccurrences per region for a species without name passed in parameter")
-	void testOccurencesOfSpeciesInRegionWithoutName() throws Exception {
-		
-		assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/1?scientificname="), ApiResquester.getOccurrences("",1));
 	}
 	
-	@Test
-	@DisplayName("Test getOccurrences per region for a species with 0 precision passed in parameter")
-	void testOccurencesOfSpeciesInRegionWithoutPrecision() throws Exception {
-		
-		assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/0?scientificname=Morus%20Bassanus"), ApiResquester.getOccurrences("Morus Bassanus",0));
-	}
+	
+//	@Test
+//	@DisplayName("Test getOccurrences per region for a species without name passed in parameter")
+//	void testOccurencesOfSpeciesInRegionWithoutName() throws Exception {
+//		
+//		//assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/1?scientificname="), ApiResquester.getOccurrences("",1));
+//	}
+//	
+//	@Test
+//	@DisplayName("Test getOccurrences per region for a species with 0 precision passed in parameter")
+//	void testOccurencesOfSpeciesInRegionWithoutPrecision() throws Exception {
+//		
+//		//assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/0?scientificname=Morus%20Bassanus"), ApiResquester.getOccurrences("Morus Bassanus",0));
+//	}
+//Test of getSpecies
 	
 	@Test
 	@DisplayName("Test getOccurrences per region for a species name and between two dates passed in parameter")
 	void testOccurencesOfSpeciesInRegionWithInterval() throws Exception {
+		//Test of https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23")
+		JSONObject jsonOccurence = ApiResquester.getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3),2); //test interval
+		JSONArray resultatRecherche = jsonOccurence.getJSONArray("features");
+		JSONObject article = resultatRecherche.getJSONObject(0); //the first element
+		assertEquals(article.getString("type"),"Feature");
 		
-		assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23"), ApiResquester.getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3),2));
 	}
 	
 	@Test
 	@DisplayName("Test getOccurrences for a species name passed in parameter and a GeoHash")
 	void testOccurencesOfSpeciesWithSameGeoHash() throws Exception {
-		
-		assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd"), ApiResquester.getOccurrences("Morus Bassanus","spd"));
+		//test of https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd"
+		JSONObject jsonOccurence = ApiResquester.getOccurrences("Morus bassanus","spd"); 
+		JSONArray resultatRecherche = jsonOccurence.getJSONArray("results");
+		JSONObject article = resultatRecherche.getJSONObject(0); 
+		assertEquals(article.getString("country"),"FR");
 	}
 	
 	@Test
 	@DisplayName("Test getOccurrences with a GeoHash")
 	void testOccurencesWithSameGeoHash() throws Exception {
-		
-		assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence?geometry=spd"), ApiResquester.getOccurrences("","spd"));
+		//test of https://api.obis.org/v3/occurrence?geometry=spd
+		JSONObject jsonOccurence = ApiResquester.getOccurrences("","spd"); 
+		JSONArray resultatRecherche = jsonOccurence.getJSONArray("results");
+		JSONObject article = resultatRecherche.getJSONObject(0); 
+		assertEquals(article.getString("infraphylum"),"Dinoflagellata");
 	}
-	*/
 	
 	
 	@Test
