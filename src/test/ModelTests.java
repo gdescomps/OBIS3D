@@ -12,7 +12,10 @@ import org.junit.jupiter.api.Test;
 //import org.skyscreamer.jsonassert.JSONAssert;
 
 import model.Model;
+import model.Species;
+import model.ZoneReport;
 import model.ApiResquester;
+import model.GlobalReport;
 
 
 class ModelTests {
@@ -26,6 +29,7 @@ class ModelTests {
 	}
 
 	
+	/*
 	@Test
 	@DisplayName("Test getOccurrences per region for a species name passed in parameter")
 	void testOccurencesOfSpeciesInRegion() throws Exception {
@@ -38,14 +42,8 @@ class ModelTests {
 			System.out.println("non");
 		};
 		
-		/*ObjectMapper mapper = new ObjectMapper();
-
-		JsonNode tree1 = mapper.readTree(jsonInput1);
-		JsonNode tree2 = mapper.readTree(jsonInput2);
-
-		boolean areTheyEqual = tree1.equals(tree2);
-		*/
 	}
+	*/
 	
 	/*
 	@Test
@@ -84,11 +82,11 @@ class ModelTests {
 	}
 	*/
 	
-	/*
+	
 	@Test
 	@DisplayName("Test getOccurrences of the first 20 names")
 	void testOccurrencesOf20firstNames() {
-		JSONObject jsonOccurence = ApiResquester.getOccurrences("ma");;
+		JSONObject jsonOccurence = ApiResquester.getSpeciesNames("ma");;
 		JSONArray resultatRecherche = jsonOccurence.getJSONArray("search");
 		boolean notFailed = true;
 		if(resultatRecherche.length()<=20) { 
@@ -104,8 +102,34 @@ class ModelTests {
 		}
 		assertTrue(notFailed);
 	}
-	*/
+	
+	@Test
+	@DisplayName("Test global report")
+	void testGlobalReport() throws Exception {
+		Model model = new Model();
+		Boolean notFailed = true;
+		GlobalReport globalReport = model.getExhaustiveReport("Delphinidae");
+		ZoneReport zoneReport = globalReport.getZoneReport().get(0);
+		//Test of the values of the global report
+		if(globalReport.getMaxOccurences()!=8147) { 
+			fail("maxOccurence is wrong");			
 
+		}else if(globalReport.getMinOccurences()!=1) {
+			fail("minOccurence is wrong");			
+		}
+		else if(globalReport.getSpecies().getScientificName()!="Delphinidae") { //if the name is wrong
+			fail("the name is wrong");			
+		}
+		else if(globalReport.getZoneReport().size()<=0) { //if there is no zone
+			fail("There is no zone");
+		}else if(zoneReport.getOccurenceCount()!=8147) {
+			fail("First occurrence count is wrong");
+		}else if(zoneReport.getZone().get(0).getX()!=-80.15625 || zoneReport.getZone().get(0).getY()!=32.34375) {
+			fail("First zone coordinate is wrong");
+		}
+	}
+
+	/*
 	@Test
 	@DisplayName("Fail Test")
 	void failTest() {
@@ -113,6 +137,6 @@ class ModelTests {
 			fail("Description of custom failure");
 		}
 	}
-
+	*/
 }
 

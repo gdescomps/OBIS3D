@@ -17,6 +17,11 @@ public class GlobalReport {
 		this.species = species;
 	}
 	
+	/**
+	 */
+	public Species getSpecies() {
+		return this.species;
+	}
 	
 	/**
 	 * @param zoneReports the zoneReports to set
@@ -24,6 +29,14 @@ public class GlobalReport {
 	public void addZoneReport(ZoneReport zoneReport) {
 		this.zoneReports.add(zoneReport);
 	}
+	
+	/**
+	 * @return zoneReports 
+	 */
+	public ArrayList<ZoneReport> getZoneReport() {
+		return this.zoneReports;
+	}
+
 
 
 	/**
@@ -41,8 +54,28 @@ public class GlobalReport {
 		this.maxOccurences = maxOccurences;
 	}
 	
+	/**
+	 * @return minOccurences the minOccurences to get
+	 */
+	public int getMinOccurences() {
+		return this.minOccurences;
+	}
+
+
+	/**
+	 * @return maxOccurences the maxOccurences to get
+	 */
+	public int getMaxOccurences() {
+		return this.maxOccurences;
+	}
 	
-	
+	@Override
+	public String toString() {
+		String result;
+		result = species + " \nmin occurence = " + minOccurences + " \nmax occurence = " + maxOccurences ;
+		result += "\nzone report =" + zoneReports;
+		return result;
+	}
 	
 
 }

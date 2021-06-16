@@ -11,8 +11,6 @@ public class ZoneReport {
 	private ArrayList<Occurence> occurences = new ArrayList<Occurence>();
 	
 
-	
-	
 	/**
 	 * @param zone
 	 * @param occurenceCount
@@ -22,7 +20,6 @@ public class ZoneReport {
 		this.zone = zone;
 		this.occurenceCount = occurenceCount;
 	}
-
 
 
 	/**
@@ -36,20 +33,35 @@ public class ZoneReport {
 		this.occurences = occurences;
 	}
 
-
-
 	/**
 	 * @param zone the zone to set
 	 */
 	public void setZone(ArrayList<Point2D> zone) {
 		this.zone = zone;
 	}
+	
+	/**
+	 * @return the zone
+	 */
+	public ArrayList<Point2D> getZone() {
+		return this.zone;
+	}
+	
+	
 	/**
 	 * @param occurenceCount the occurenceCount to set
 	 */
 	public void setOccurenceCount(int occurenceCount) {
 		this.occurenceCount = occurenceCount;
 	}
+	
+	/**
+	 * @return occurenceCount
+	 */
+	public int getOccurenceCount() {
+		return this.occurenceCount;
+	}
+	
 	/**
 	 * @param occurences the occurences to set
 	 */
@@ -57,6 +69,17 @@ public class ZoneReport {
 		this.occurences = occurences;
 	}
 	
+	/**
+	 * @return the occurences
+	 */
+	public ArrayList<Occurence> getOccurences() {
+		return this.occurences;
+	}
+	
+	@Override
+	public String toString() {
+		return "Zone = "+zone+ " \nOccurence count = "+occurenceCount+ "\noccurences = "+occurences;
+	}
 	
 
 }

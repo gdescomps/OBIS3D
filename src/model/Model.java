@@ -34,7 +34,7 @@ public class Model {
 		return "Hello World";
 	}
 	
-	public void getExhaustiveReport(String speciesName) throws Exception {
+	public GlobalReport getExhaustiveReport(String speciesName) throws Exception {
 		// Test si le speciesName existe vraiment
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = ApiResquester.getSpecies(speciesName);
@@ -54,12 +54,12 @@ public class Model {
 			int minOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
 			int maxOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
 			
-			for (int i=0; i<3; i++) {
+			for (int i=0; i<features.length(); i++) { //features.length()
 				// Occurence Count :
 				int occurenceCount = features.getJSONObject(i).getJSONObject("properties").getInt("n");
 				
 				//  Recherche Min occurence & Max occurence :
-				if (minOccurence<=occurenceCount){minOccurence=occurenceCount;}
+				if (minOccurence>=occurenceCount){minOccurence=occurenceCount;}
 				if (maxOccurence<=occurenceCount){maxOccurence=occurenceCount;}
 				ArrayList<Point2D> zone = new ArrayList<Point2D>(5);
 				for (int j=0; j<5;j++) {
@@ -73,13 +73,13 @@ public class Model {
 			}
 			globalReport.setMaxOccurences(maxOccurence);
 			globalReport.setMinOccurences(minOccurence);
+			return globalReport;
 		}
 
 			
 	}
 		
 		
-
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -96,8 +96,9 @@ public class Model {
 //			}
 //		}
 		
-		
-		
+		Model model = new Model();;
+		GlobalReport gb = model.getExhaustiveReport("Delphinidae");
+		System.out.println(gb);
 		
 	}
 //	
