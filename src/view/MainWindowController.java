@@ -1,4 +1,4 @@
-package application;
+package view;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,9 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import view.CameraManager;
 
-public class SampleController implements Initializable {
+public class MainWindowController implements Initializable {
 	@FXML
 	private Pane viewPane;
 	
