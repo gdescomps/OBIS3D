@@ -79,18 +79,12 @@
                      </VBox.margin>
                   </Label>
                   <ScrollPane prefHeight="150.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <TableView editable="true" layoutX="78.0" layoutY="-20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
-                                </columns>
-                              </TableView>
-                           </children>
-                        </AnchorPane>
-                    </content>
+                     <content>
+                        <TableView fx:id="table" editable="true" prefWidth="1.7976931348623157E308" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                          <columns>
+                          </columns>
+                        </TableView>
+                     </content>
                   </ScrollPane>
                </children>
             </VBox>

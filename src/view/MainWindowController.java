@@ -3,6 +3,8 @@ package view;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -10,6 +12,9 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,8 +28,33 @@ public class MainWindowController implements Initializable {
 	@FXML
 	private AnchorPane window;
 	
+	@SuppressWarnings("rawtypes")
+	@FXML
+	private TableView table;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+//		table = new TableView();
+		
+
+        table.setEditable(true);
+ 
+        TableColumn<ZoneEntry, String> occurenceCountCol = new TableColumn<ZoneEntry, String>("Occurences count");
+        TableColumn<ZoneEntry, String> zonePointsCol = new TableColumn<ZoneEntry, String>("Zone points");
+        
+        final ObservableList<ZoneEntry> data = FXCollections.observableArrayList(
+    	    new ZoneEntry("24", "1,2,3,4")
+    	);
+        
+        table.setItems(data);
+        
+        occurenceCountCol.setCellValueFactory(new PropertyValueFactory<>("occurenceCount"));
+        zonePointsCol.setCellValueFactory(new PropertyValueFactory<>("zonePoints"));
+        
+        table.getColumns().addAll(occurenceCountCol, zonePointsCol);
+        
+        
 		
 		//Create a Pane et graph scene root for the 3D content
         Group root3D = new Group();
@@ -61,6 +91,7 @@ public class MainWindowController implements Initializable {
 		subscene.heightProperty().bind(viewPane.heightProperty());
 		subscene.widthProperty().bind(viewPane.widthProperty());
 		subscene.setManaged(false);
-
+		
+		
 	}
 }
