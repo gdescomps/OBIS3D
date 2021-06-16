@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class GlobalReport {
 	private Species species;
-	private int minOccurences;
-	private int maxOccurences;
+	private int minOccurences = 0;
+	private int maxOccurences = -1;
 	ArrayList<ZoneReport> zoneReports = new ArrayList<ZoneReport>();
 	
 	
@@ -18,6 +18,13 @@ public class GlobalReport {
 	}
 	
 	
+	/**
+	 * 
+	 */
+	public GlobalReport() {
+	}
+
+
 	/**
 	 * @param zoneReports the zoneReports to set
 	 */
@@ -40,6 +47,23 @@ public class GlobalReport {
 	public void setMaxOccurences(int maxOccurences) {
 		this.maxOccurences = maxOccurences;
 	}
+
+
+	/**
+	 * @return the maxOccurences
+	 */
+	public int getMaxOccurences() {
+		return maxOccurences;
+	}
+
+
+	/**
+	 * @return the zoneReports
+	 */
+	public ArrayList<ZoneReport> getZoneReports() {
+		return zoneReports;
+	}
+	
 	
 	
 	

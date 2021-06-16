@@ -120,6 +120,7 @@ public abstract class ApiResquester {
 	 * @throws Exception 
 	 */
 	public static JSONObject getExhaustiveReport(Species species, int precision) throws Exception {
+		System.out.println(species.getScientificName());
 		if(species.getScientificName()=="") {
 			throw new Exception("Nom de l'espèce non renseigné");
 		}
@@ -127,9 +128,9 @@ public abstract class ApiResquester {
 			throw new Exception("Précision 0 non valide");
 		}
 		JSONObject jsonOccurence = new JSONObject();
-//		String newSpecies = species.getScientificName().replaceAll(" ", "%20");
+		String newSpecies = species.getScientificName().replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+species.getScientificName());
+			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -212,8 +213,8 @@ public abstract class ApiResquester {
 		//Test getSpecies
 //		System.out.println(getSpecies("morus bassanus"));
 		Species species =new Species("Delphinidae");
-		System.out.println(getOccurrences(species.getScientificName(), 3));
-//		System.out.println(getSpecies("mr"));
+//		System.out.println(getExhaustiveReport(species, 1));
+//		System.out.println(getSpecies("Delphinidae"));
 //		System.out.println(getSpeciesNames("aa"));
 		
 
