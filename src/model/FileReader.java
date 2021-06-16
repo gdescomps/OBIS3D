@@ -20,6 +20,11 @@ public abstract class FileReader {
 	}
 	
 	
+	/**
+	 * @param pathOfJsonFile
+	 * @return JsonObject read from a Jsonfile
+	 * @throws IOException
+	 */
 	public static JSONObject readFile(String pathOfJsonFile) throws IOException {
 		Reader reader = new java.io.FileReader(pathOfJsonFile);
 		BufferedReader rd = new BufferedReader(reader);

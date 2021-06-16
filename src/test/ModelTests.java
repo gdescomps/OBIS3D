@@ -43,11 +43,25 @@ class ModelTests {
 		Model model = new Model();
 		GlobalReport globalReportLocal = new GlobalReport();
 		GlobalReport globalReportAPI = new GlobalReport();
+
 		
 		globalReportAPI= model.getExhaustiveReport("Delphinidae");
-		globalReportLocal = model.getExhaustiveReportFromLocal("Delphinidae", "src/delphinidaeOccurence.json");
+		System.out.println(globalReportAPI.getMaxOccurences());
+		System.out.println(globalReportAPI.getMinOccurences());
+		System.out.println(globalReportAPI.getZoneReports().get(0).getZone().get(0));
+		System.out.println(globalReportAPI.getZoneReports().get(0).getZone().get(1));
+		System.out.println(globalReportAPI.getZoneReports().get(0).getZone().get(2));
 		
-		assertSame(globalReportAPI,globalReportLocal,"Identiques");
+		globalReportLocal = model.getExhaustiveReportFromLocal("Delphinidae", "src/delphinidaeOccurence.json");
+		System.out.println(globalReportLocal.getMaxOccurences());
+		System.out.println(globalReportLocal.getMinOccurences());
+		System.out.println(globalReportLocal.getZoneReports().get(0).getZone().get(0));
+		System.out.println(globalReportLocal.getZoneReports().get(0).getZone().get(1));
+		System.out.println(globalReportLocal.getZoneReports().get(0).getZone().get(2));
+		
+		if(!(globalReportAPI.equals(globalReportLocal))) {
+			fail("Global Report diff");
+		}
 	}
 	
 	

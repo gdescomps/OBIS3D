@@ -18,13 +18,18 @@ public class Model {
 	
 	
 	
-
+/// Constructors :
+	
 	/**
-	 * 
+	 * @Constructor of Model
 	 */
 	public Model() {
 	}
 
+	
+	
+/// Gettres :
+	
 	/**
 	 * @return the controller
 	 */
@@ -32,6 +37,10 @@ public class Model {
 		return controller;
 	}
 
+	
+	
+/// Setters :
+	
 	/**
 	 * @param controller the controller to set
 	 */
@@ -39,15 +48,14 @@ public class Model {
 		this.controller = controller;
 	}
 	
-	public String helloWorld() {
-		return "Hello World";
-	}
+	
+/// Class functions :
 	
 	/**
-	 * Retourne le Global Report d'une espece qui est constitué du type de l'espece, le min et max de ces occurences par zones et d'une liste des zones où l'espèce apparait
+	 * @return the Global Report of a species which is composed of the species it self, max and min Occurences of the species in all Occurence's zones, 
 	 */
 	public GlobalReport getExhaustiveReport(String speciesName) throws Exception {
-		// Test si le speciesName existe vraiment
+		// Test if the species really exist
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = ApiResquester.getSpecies(speciesName);
 		if (jsonObject.getInt("total")==0) {
@@ -56,8 +64,8 @@ public class Model {
 		else {
 			Species species = new Species(speciesName);
 			
-			// Appel à l'API 
-			jsonObject = ApiResquester.getExhaustiveReport(species,3);
+			// Call the API 
+			jsonObject = ApiResquester.getExhaustiveReport(species,1);
 			
 			return createExhaustiveReport(jsonObject, species);
 		}
@@ -65,10 +73,9 @@ public class Model {
 	
 	
 	/**
-	 * Retourne l'exhaustive report de l'espece à partir de d'un fichier local en utilisant la methode readFile du FileReader;
 	 * @param speciesName
 	 * @param filePath
-	 * @return
+	 * @return the Exhaustive Report of the species from local file using realFile method from the class FileReader
 	 * @throws IOException
 	 */
 	public GlobalReport getExhaustiveReportFromLocal(String speciesName, String filePath) throws IOException {
@@ -82,10 +89,15 @@ public class Model {
 	}
 	
 	
+	/**
+	 * @param jsonObject
+	 * @param species
+	 * @return Global Report 
+	 */
 	public GlobalReport createExhaustiveReport(JSONObject jsonObject, Species species) {
 		
 		GlobalReport globalReport = new GlobalReport(species);
-		// Traitement du JSONObject retourné par l'API
+		// treat the jsonObject returned from the API/LocalFile
 		JSONArray features = jsonObject.getJSONArray("features");
 		int minOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
 		int maxOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
@@ -94,14 +106,14 @@ public class Model {
 			// Occurence Count :
 			int occurenceCount = features.getJSONObject(i).getJSONObject("properties").getInt("n");
 			
-			//  Recherche Min occurence & Max occurence :
+			//  Research Min occurence & Max occurence :
 			if (minOccurence>=occurenceCount){minOccurence=occurenceCount;}
 			if (maxOccurence<=occurenceCount){maxOccurence=occurenceCount;}
 			
 			ArrayList<Point2D> zone = new ArrayList<Point2D>(5);
 			
 			for (int j=0; j<features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).length();j++) {
-				// Convertion des corrdonnées situées dans "geometry" depuis un JSONarray à un ArrayList<Point2D> :
+				// Convert the coordinates of "geometry" from a JSONarray to an ArrayList<Point2D> :
 				JSONArray location = features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(j);
 				Point2D p = new Point2D.Double(location.getDouble(0), location.getDouble(1));
 				zone.add(p);
@@ -113,30 +125,6 @@ public class Model {
 		globalReport.setMinOccurences(minOccurence);
 		return globalReport;
 		
-	}
-		
-		
-
-	
-	public static void main(String[] args) throws Exception {
-		
-		//test que cette boucle atteint bien les coordonnées de "geometry" :
-		
-//		JSONObject json = ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae");
-//		JSONArray features = json.getJSONArray("features");
-//		System.out.println("la longueur est : #################" + features.length());
-//		for (int i=0; i<3; i++) {
-//			for (int j=0; j<5;j++) {
-//				JSONArray location = features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(j);
-//				Point2D p = new Point2D.Double(location.getDouble(0), location.getDouble(1));
-//				System.out.println(p.getX());
-//			}
-//		}
-//		
-		
-		
-		
-	}
-//	
+	}	
 
 }
