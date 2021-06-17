@@ -25,7 +25,7 @@ public class Species {
 	
 	@Override
 	public String toString() {
-		return "Species name = " + scientificName;
+		return "\nSpecies name = " + scientificName;
 	}
 
 }

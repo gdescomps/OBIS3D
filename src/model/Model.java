@@ -78,8 +78,62 @@ public class Model {
 
 			
 	}
+	
+	/**
+	 * Get the details of the different observations for a GeoHash and a scientific name (which can be empty) passed in parameter: 
+	 * "scientificName" 
+	 * "order" 
+	 * "superclass" 
+	 * "recordedBy" 
+	 * "species"
+	 * @param scientificName
+	 * @param geoHash
+	 * @return occurrenceList
+	 */
+	public ArrayList<OccurrenceDetail> getOccurrencesDetails(String scientificName, String geoHash){
+		ArrayList<OccurrenceDetail> occurrenceList = new ArrayList<OccurrenceDetail>();
+		JSONObject jsonOccurrence = ApiResquester.getOccurrences(scientificName,geoHash);
+		JSONArray result = jsonOccurrence.getJSONArray("results");
 		
-		
+		for(int i=1;i<result.length();i++) { 
+			JSONObject element = result.getJSONObject(i); 
+			
+			OccurrenceDetail occurrence = new OccurrenceDetail();
+			if(scientificName!="") {
+				occurrence.setSpecies(new Species (scientificName));
+			}
+			if(element.has("order")) {
+				occurrence.setOrder(element.getString("order"));
+			}
+			if(element.has("taxonRemarks")){
+				occurrence.setRecordedBy(element.getString("taxonRemarks"));
+			}
+			if(element.has("superclass")) {
+				occurrence.setSuperclass(element.getString("superclass"));
+			}
+			occurrenceList.add(occurrence);
+		}
+		return occurrenceList;
+	}
+	
+	/**
+	 * Get the first 20 names of species starting with a string passed in parameter
+	 * @param nameStart
+	 * @return scientificNames
+	 */
+	public ArrayList<String> get20firstNames(String nameStart){
+		ArrayList<String> scientificNames = new ArrayList<String>();
+		JSONObject jsonOccurrence = ApiResquester.getSpeciesNames(nameStart);
+		JSONArray result = jsonOccurrence.getJSONArray("search");
+		for(int i=1;i<result.length();i++) { 
+			JSONObject element = result.getJSONObject(i); 
+			String scientificName = element.getString("scientificName");
+			scientificNames.add(scientificName);
+		}
+		return scientificNames;
+	}
+	
+	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -96,10 +150,18 @@ public class Model {
 //			}
 //		}
 		
-		Model model = new Model();;
-		GlobalReport gb = model.getExhaustiveReport("Delphinidae");
-		System.out.println(gb);
+		Model model = new Model();
+//		GlobalReport gb = model.getExhaustiveReport("Delphinidae");
+//		System.out.println(gb);
 		
+	
+		//ArrayList<OccurrenceDetail> od1 = model.getOccurrencesDetails("Protozoa", "spd"); //
+		ArrayList<OccurrenceDetail> od2 = model.getOccurrencesDetails("Delphinidae", "spd");
+		System.out.println(od2);
+		//ArrayList<OccurrenceDetail> od3 = model.getOccurrencesDetails("", "spd"); 
+		ArrayList<String> names = model.get20firstNames("porcel");
+		System.out.println(names);
+
 	}
 //	
 
