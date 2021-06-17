@@ -1,18 +1,13 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDateTime;
 import java.time.Period;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-//import org.skyscreamer.jsonassert.JSONAssert;
-
 import model.Model;
-import model.Species;
 import model.ZoneReport;
 import model.ApiResquester;
 import model.GlobalReport;
@@ -33,8 +28,8 @@ class ModelTests {
 	@DisplayName("Test getOccurrences per region for a species name passed in parameter")
 	void testOccurencesOfSpeciesInRegion() throws Exception {
 		//test of https://api.obis.org/v3/occurrence/grid/1?scientificname=Morus%20Bassanus
-		JSONObject jsonOccurence = ApiResquester.getOccurrences("Morus bassanus",1); //test name with space	
-		JSONArray result = jsonOccurence.getJSONArray("features");
+		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",1); //test name with space	
+		JSONArray result = jsonOccurrence.getJSONArray("features");
 		JSONObject firstElement = result.getJSONObject(0); //the first element
 		 assertEquals(firstElement.getString("type"),"Feature");
 		
@@ -59,8 +54,8 @@ class ModelTests {
 	@DisplayName("Test getOccurrences per region for a species name and between two dates passed in parameter")
 	void testOccurencesOfSpeciesInRegionWithInterval() throws Exception {
 		//Test of https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23")
-		JSONObject jsonOccurence = ApiResquester.getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3),2); //test interval
-		JSONArray result = jsonOccurence.getJSONArray("features");
+		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3),2); //test interval
+		JSONArray result = jsonOccurrence.getJSONArray("features");
 		JSONObject firstElement = result.getJSONObject(0); //the first element
 		assertEquals(firstElement.getString("type"),"Feature");		
 	}
@@ -69,8 +64,8 @@ class ModelTests {
 	@DisplayName("Test getOccurrences for a species name passed in parameter and a GeoHash")
 	void testOccurencesOfSpeciesWithSameGeoHash() throws Exception {
 		//test of https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd"
-		JSONObject jsonOccurence = ApiResquester.getOccurrences("Morus bassanus","spd"); 
-		JSONArray result = jsonOccurence.getJSONArray("results");
+		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus","spd"); 
+		JSONArray result = jsonOccurrence.getJSONArray("results");
 		JSONObject secondElement = result.getJSONObject(1); 
 		//Test some value of the second element
 		assertEquals(secondElement.getString("country"),"FR");
@@ -84,8 +79,8 @@ class ModelTests {
 	@DisplayName("Test getOccurrences with a GeoHash")
 	void testOccurencesWithSameGeoHash() throws Exception {
 		//test of https://api.obis.org/v3/occurrence?geometry=spd
-		JSONObject jsonOccurence = ApiResquester.getOccurrences("","spd"); 
-		JSONArray result = jsonOccurence.getJSONArray("results");
+		JSONObject jsonOccurrence = ApiResquester.getOccurrences("","spd"); 
+		JSONArray result = jsonOccurrence.getJSONArray("results");
 		JSONObject firstElement = result.getJSONObject(0); 
 		assertEquals(firstElement.getString("infraphylum"),"Dinoflagellata");
 	}
@@ -94,8 +89,8 @@ class ModelTests {
 	@Test
 	@DisplayName("Test getOccurrences of the first 20 names")
 	void testOccurrencesOf20firstNames() {
-		JSONObject jsonOccurence = ApiResquester.getSpeciesNames("ma");;
-		JSONArray result = jsonOccurence.getJSONArray("search");
+		JSONObject jsonOccurrence = ApiResquester.getSpeciesNames("ma");;
+		JSONArray result = jsonOccurrence.getJSONArray("search");
 		boolean notFailed = true;
 		if(result.length()<=20) { 
 			int i=0;
@@ -114,9 +109,8 @@ class ModelTests {
 	@Test
 	@DisplayName("Test getSpecies")
 	void testGetSpecies() {
-		Species species =new Species("Delphinidae");
-		JSONObject jsonOccurence = ApiResquester.getSpecies("Morus"); //https://api.obis.org/v3/taxon/morus 
-		JSONArray result = jsonOccurence.getJSONArray("results");
+		JSONObject jsonOccurrence = ApiResquester.getSpecies("Morus"); //https://api.obis.org/v3/taxon/morus 
+		JSONArray result = jsonOccurrence.getJSONArray("results");
 		JSONObject firstElement = result.getJSONObject(0); 
 		//Test some value of the first element
 		assertEquals(firstElement.getString("taxonRank"), "Genus");
@@ -130,7 +124,6 @@ class ModelTests {
 	@DisplayName("Test global report")
 	void testGlobalReport() throws Exception {
 		Model model = new Model();
-		Boolean notFailed = true;
 		GlobalReport globalReport = model.getExhaustiveReport("Delphinidae");
 		ZoneReport zoneReport = globalReport.getZoneReport().get(0);
 		//Test of the values of the global report
