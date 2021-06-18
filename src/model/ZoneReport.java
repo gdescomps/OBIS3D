@@ -7,31 +7,30 @@ import java.util.ArrayList;
 
 public class ZoneReport {
 	private ArrayList<Point2D> zone = new ArrayList<Point2D>(5);
-	private int occurenceCount;
-	private ArrayList<Occurence> occurences = new ArrayList<Occurence>();
-	
+	private int occurrenceCount;
+	private ArrayList<Occurrence> occurrences = new ArrayList<Occurrence>();
 
 	
 /// Constructors :
 	
 	/**
 	 * @param zone
-	 * @param occurenceCount
+	 * @param occurrenceCount
 	 */
-	public ZoneReport(ArrayList<Point2D> zone, int occurenceCount) {
+	public ZoneReport(ArrayList<Point2D> zone, int occurrenceCount) {
 		this.zone = zone;
-		this.occurenceCount = occurenceCount;
+		this.occurrenceCount = occurrenceCount;
 	}
-	
+
 	/**
 	 * @param zone
-	 * @param occurenceCount
-	 * @param occurences
+	 * @param occurrenceCount
+	 * @param occurrences
 	 */
-	public ZoneReport(ArrayList<Point2D> zone, int occurenceCount, ArrayList<Occurence> occurences) {
+	public ZoneReport(ArrayList<Point2D> zone, int occurrenceCount, ArrayList<Occurrence> occurrences) {
 		this.zone = zone;
-		this.occurenceCount = occurenceCount;
-		this.occurences = occurences;
+		this.occurrenceCount = occurrenceCount;
+		this.occurrences = occurrences;
 	}
 
 	
@@ -46,17 +45,17 @@ public class ZoneReport {
 	}
 	
 	/**
-	 * @param occurenceCount the occurenceCount to set
+	 * @param occurrenceCount the occurrenceCount to set
 	 */
-	public void setOccurenceCount(int occurenceCount) {
-		this.occurenceCount = occurenceCount;
+	public void setOccurrenceCount(int occurrenceCount) {
+		this.occurrenceCount = occurrenceCount;
 	}
-	
+
 	/**
-	 * @param occurences the occurences to set
+	 * @param occurrences the occurrences to set
 	 */
-	public void setOccurences(ArrayList<Occurence> occurences) {
-		this.occurences = occurences;
+	public void setOccurrences(ArrayList<Occurrence> occurrences) {
+		this.occurrences = occurrences;
 	}
 	
 	
@@ -72,18 +71,18 @@ public class ZoneReport {
 
 
 	/**
-	 * @return the occurenceCount
+	 * @return the occurrenceCount
 	 */
-	public int getOccurenceCount() {
-		return occurenceCount;
+	public int getOccurrenceCount() {
+		return occurrenceCount;
 	}
 	
 
 	/**
-	 * @return the occurences
+	 * @return the occurrences
 	 */
-	public ArrayList<Occurence> getOccurences() {
-		return occurences;
+	public ArrayList<Occurrence> getOccurrences() {
+		return occurrences;
 	}
 
 	
@@ -92,8 +91,8 @@ public class ZoneReport {
 	
 	@Override
     public boolean equals (Object zoneReport) {
-		if (this.getOccurenceCount() != ((ZoneReport) zoneReport).getOccurenceCount()) {
-			System.out.println("Different OccurenceCount");
+		if (this.getOccurrenceCount() != ((ZoneReport) zoneReport).getOccurrenceCount()) {
+			System.out.println("Different OccurrenceCount");
 			return false;
 		} 
 		
@@ -104,6 +103,11 @@ public class ZoneReport {
 			} 
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return "Zone = "+zone+ " \nOccurrence count = "+occurrenceCount+ "\noccurrences = "+occurrences;
 	}
 
 	

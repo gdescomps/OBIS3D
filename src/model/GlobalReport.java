@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class GlobalReport {
 	private Species species;
-	private int minOccurences ;
-	private int maxOccurences ;
+
+	private int minOccurrences;
+	private int maxOccurrences;
+
 	ArrayList<ZoneReport> zoneReports = new ArrayList<ZoneReport>();
 	
 	/// Construtors :
@@ -17,6 +19,11 @@ public class GlobalReport {
 		this.species = species;
 	}
 	
+	/**
+	 */
+	public Species getSpecies() {
+		return this.species;
+	}
 	
 	/**
 	 * @constructor GlobalReport
@@ -31,24 +38,32 @@ public class GlobalReport {
 	public void addZoneReport(ZoneReport zoneReport) {
 		this.zoneReports.add(zoneReport);
 	}
+	
+	/**
+	 * @return zoneReports 
+	 */
+	public ArrayList<ZoneReport> getZoneReport() {
+		return this.zoneReports;
+	}
+
 
 	
 	
 	/// Setters :
 
 	/**
-	 * @param minOccurences the minOccurences to set
+	 * @param minOccurrences the minOccurrences to set
 	 */
-	public void setMinOccurences(int minOccurences) {
-		this.minOccurences = minOccurences;
+	public void setMinOccurrences(int minOccurrences) {
+		this.minOccurrences = minOccurrences;
 	}
 
 
 	/**
-	 * @param maxOccurences the maxOccurences to set
+	 * @param maxOccurrences the maxOccurrences to set
 	 */
-	public void setMaxOccurences(int maxOccurences) {
-		this.maxOccurences = maxOccurences;
+	public void setMaxOccurrences(int maxOccurrences) {
+		this.maxOccurrences = maxOccurrences;
 	}
 
 
@@ -59,7 +74,7 @@ public class GlobalReport {
 	 * @return the maxOccurences
 	 */
 	public int getMaxOccurences() {
-		return maxOccurences;
+		return maxOccurrences;
 	}
 
 
@@ -74,7 +89,7 @@ public class GlobalReport {
 	 * @return the minOccurences
 	 */
 	public int getMinOccurences() {
-		return minOccurences;
+		return minOccurrences;
 	}
 	
 	
@@ -104,8 +119,28 @@ public class GlobalReport {
 
 	
 	
+	/**
+	 * @return minOccurrences the minOccurrences to get
+	 */
+	public int getMinOccurrences() {
+		return this.minOccurrences;
+	}
+
+
+	/**
+	 * @return maxOccurrences the maxOccurrences to get
+	 */
+	public int getMaxOccurrences() {
+		return this.maxOccurrences;
+	}
 	
-	
+	@Override
+	public String toString() {
+		String result;
+		result = species + " \nmin occurrence = " + minOccurrences + " \nmax occurrence = " + maxOccurrences ;
+		result += "\nzone report =" + zoneReports;
+		return result;
+	}
 	
 
 }
