@@ -36,7 +36,7 @@ public class ZoneReport {
 		this.occurences = occurences;
 	}
 
-
+/// Setters :
 
 	/**
 	 * @param zone the zone to set
@@ -57,6 +57,53 @@ public class ZoneReport {
 		this.occurences = occurences;
 	}
 	
+	
+	
+/// Getters :
+	
+	/**
+	 * @return the zone
+	 */
+	public ArrayList<Point2D> getZone() {
+		return zone;
+	}
+
+
+	/**
+	 * @return the occurenceCount
+	 */
+	public int getOccurenceCount() {
+		return occurenceCount;
+	}
+	
+
+	/**
+	 * @return the occurences
+	 */
+	public ArrayList<Occurence> getOccurences() {
+		return occurences;
+	}
+
+	
+	
+	/// Overrides :
+	
+	@Override
+    public boolean equals (Object zoneReport) {
+		if (this.getOccurenceCount() != ((ZoneReport) zoneReport).getOccurenceCount()) {
+			System.out.println("Different OccurenceCount");
+			return false;
+		} 
+		
+		for (int i = 0; i<this.zone.size(); i++) {
+			if (!(this.zone.get(i).equals(((ZoneReport) zoneReport).getZone().get(i)))) {
+				System.out.println("Different Points2D included in Zone");
+				return  false;
+			} 
+		}
+		return true;
+	}
+
 	
 
 }

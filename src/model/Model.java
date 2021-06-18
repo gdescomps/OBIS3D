@@ -2,6 +2,7 @@ package model;
 
 
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -15,7 +16,20 @@ public class Model {
 	
 	ArrayList<GlobalReport> history = new ArrayList<GlobalReport>();
 	
+	
+	
+/// Constructors :
+	
+	/**
+	 * @Constructor of Model
+	 */
+	public Model() {
+	}
 
+	
+	
+/// Getters :
+	
 	/**
 	 * @return the controller
 	 */
@@ -23,6 +37,10 @@ public class Model {
 		return controller;
 	}
 
+	
+	
+/// Setters :
+	
 	/**
 	 * @param controller the controller to set
 	 */
@@ -30,12 +48,14 @@ public class Model {
 		this.controller = controller;
 	}
 	
-	public String helloWorld() {
-		return "Hello World";
-	}
 	
-	public void getExhaustiveReport(String speciesName) throws Exception {
-		// Test si le speciesName existe vraiment
+/// Class functions :
+	
+	/**
+	 * @return the Global Report of a species which is composed of the species it self, max and min Occurences of the species in all Occurence's zones, 
+	 */
+	public GlobalReport getExhaustiveReport(String speciesName) throws Exception {
+		// Test if the species really exist
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = ApiResquester.getSpecies(speciesName);
 		if (jsonObject.getInt("total")==0) {
@@ -43,63 +63,71 @@ public class Model {
 		}
 		else {
 			Species species = new Species(speciesName);
-			// Cr�er un Global Report pour le species Name recherch�
-			GlobalReport globalReport = new GlobalReport(species);
-			
-			// Appel � l'API 
-			jsonObject = ApiResquester.getExhaustiveReport(species,3);
-			
-			// Traitement du JSONObject retourn� par l'API
-			JSONArray features = jsonObject.getJSONArray("features");
-			int minOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
-			int maxOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
-			
-			for (int i=0; i<3; i++) {
-				// Occurence Count :
-				int occurenceCount = features.getJSONObject(i).getJSONObject("properties").getInt("n");
-				
-				//  Recherche Min occurence & Max occurence :
-				if (minOccurence<=occurenceCount){minOccurence=occurenceCount;}
-				if (maxOccurence<=occurenceCount){maxOccurence=occurenceCount;}
-				ArrayList<Point2D> zone = new ArrayList<Point2D>(5);
-				for (int j=0; j<5;j++) {
-					// convertion des corrdonn�es situ�es dans "geometry" depuis un JSONarray � un ArrayList<Point2D> :
-					JSONArray location = features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(j);
-					Point2D p = new Point2D.Double(location.getDouble(0), location.getDouble(1));
-					zone.add(p);
-				}
-				ZoneReport zoneReport = new ZoneReport(zone, occurenceCount);
-				globalReport.addZoneReport(zoneReport);
-			}
-			globalReport.setMaxOccurences(maxOccurence);
-			globalReport.setMinOccurences(minOccurence);
-		}
 
 			
+			// Call the API 
+			jsonObject = ApiResquester.getExhaustiveReport(species,1);
+			
+			return createExhaustiveReport(jsonObject, species);
+
+		}
 	}
-		
-		
+	
 
 	
-//	public static void main(String[] args) throws Exception {
-//		
-//		//test que cette boucle atteint bien les coordonn�es de "geometry" :
-//		
-//		JSONObject json = ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae");
-//		JSONArray features = json.getJSONArray("features");
-//		System.out.println("la longueur est : #################" + features.length());
-//		for (int i=0; i<3; i++) {
-//			for (int j=0; j<5;j++) {
-//				JSONArray location = features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(j);
-//				Point2D p = new Point2D.Double(location.getDouble(0), location.getDouble(1));
-//				System.out.println(p.getX());
-//			}
-//		}
-//		
-//		
-//		
-//		
-//	}
-//	
+	/**
+	 * @param speciesName
+	 * @param filePath
+	 * @return the Exhaustive Report of the species from local file using realFile method from the class FileReader
+	 * @throws IOException
+	 */
+	public GlobalReport getExhaustiveReportFromLocal(String speciesName, String filePath) throws IOException {
+		Species species = new Species(speciesName);
+		GlobalReport globalReport = new GlobalReport(species);
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = FileReader.readFile(filePath);
+		
+		return createExhaustiveReport(jsonObject, species);
+	}
+	
+	
+	/**
+	 * @param jsonObject
+	 * @param species
+	 * @return Global Report 
+	 */
+	public GlobalReport createExhaustiveReport(JSONObject jsonObject, Species species) {
+		
+		GlobalReport globalReport = new GlobalReport(species);
+		// treat the jsonObject returned from the API/LocalFile
+		JSONArray features = jsonObject.getJSONArray("features");
+		int minOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
+		int maxOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
+		
+		for (int i=0; i<3; i++) {
+			// Occurence Count :
+			int occurenceCount = features.getJSONObject(i).getJSONObject("properties").getInt("n");
+			
+			//  Research Min occurence & Max occurence :
+			if (minOccurence>=occurenceCount){minOccurence=occurenceCount;}
+			if (maxOccurence<=occurenceCount){maxOccurence=occurenceCount;}
+			
+			ArrayList<Point2D> zone = new ArrayList<Point2D>(5);
+			
+			for (int j=0; j<features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).length();j++) {
+				// Convert the coordinates of "geometry" from a JSONarray to an ArrayList<Point2D> :
+				JSONArray location = features.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0).getJSONArray(j);
+				Point2D p = new Point2D.Double(location.getDouble(0), location.getDouble(1));
+				zone.add(p);
+			}
+			ZoneReport zoneReport = new ZoneReport(zone, occurenceCount);
+			globalReport.addZoneReport(zoneReport);
+		}
+		globalReport.setMaxOccurences(maxOccurence);
+		globalReport.setMinOccurences(minOccurence);
+		return globalReport;
+		
+	}	
 
 }

@@ -1,0 +1,1028 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90,
+              0
+            ],
+            [
+              -45,
+              0
+            ],
+            [
+              -45,
+              45
+            ],
+            [
+              -90,
+              45
+            ],
+            [
+              -90,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 95609
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -45,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              45
+            ],
+            [
+              -45,
+              45
+            ],
+            [
+              -45,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 41021
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -45,
+              45
+            ],
+            [
+              0,
+              45
+            ],
+            [
+              0,
+              90
+            ],
+            [
+              -45,
+              90
+            ],
+            [
+              -45,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 33691
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -135,
+              0
+            ],
+            [
+              -90,
+              0
+            ],
+            [
+              -90,
+              45
+            ],
+            [
+              -135,
+              45
+            ],
+            [
+              -135,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 21828
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              45,
+              0
+            ],
+            [
+              45,
+              45
+            ],
+            [
+              0,
+              45
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 16923
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              45
+            ],
+            [
+              45,
+              45
+            ],
+            [
+              45,
+              90
+            ],
+            [
+              0,
+              90
+            ],
+            [
+              0,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 12609
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              135,
+              -45
+            ],
+            [
+              180,
+              -45
+            ],
+            [
+              180,
+              0
+            ],
+            [
+              135,
+              0
+            ],
+            [
+              135,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 9381
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              90,
+              -45
+            ],
+            [
+              135,
+              -45
+            ],
+            [
+              135,
+              0
+            ],
+            [
+              90,
+              0
+            ],
+            [
+              90,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 4858
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -180,
+              0
+            ],
+            [
+              -135,
+              0
+            ],
+            [
+              -135,
+              45
+            ],
+            [
+              -180,
+              45
+            ],
+            [
+              -180,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 3660
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90,
+              45
+            ],
+            [
+              -45,
+              45
+            ],
+            [
+              -45,
+              90
+            ],
+            [
+              -90,
+              90
+            ],
+            [
+              -90,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 2748
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90,
+              -90
+            ],
+            [
+              -45,
+              -90
+            ],
+            [
+              -45,
+              -45
+            ],
+            [
+              -90,
+              -45
+            ],
+            [
+              -90,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1847
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              45,
+              -45
+            ],
+            [
+              90,
+              -45
+            ],
+            [
+              90,
+              0
+            ],
+            [
+              45,
+              0
+            ],
+            [
+              45,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1504
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -135,
+              -45
+            ],
+            [
+              -90,
+              -45
+            ],
+            [
+              -90,
+              0
+            ],
+            [
+              -135,
+              0
+            ],
+            [
+              -135,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1318
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90,
+              -45
+            ],
+            [
+              -45,
+              -45
+            ],
+            [
+              -45,
+              0
+            ],
+            [
+              -90,
+              0
+            ],
+            [
+              -90,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1204
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              -45
+            ],
+            [
+              45,
+              -45
+            ],
+            [
+              45,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1156
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -135,
+              45
+            ],
+            [
+              -90,
+              45
+            ],
+            [
+              -90,
+              90
+            ],
+            [
+              -135,
+              90
+            ],
+            [
+              -135,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1148
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              135,
+              -90
+            ],
+            [
+              180,
+              -90
+            ],
+            [
+              180,
+              -45
+            ],
+            [
+              135,
+              -45
+            ],
+            [
+              135,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 803
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -180,
+              45
+            ],
+            [
+              -135,
+              45
+            ],
+            [
+              -135,
+              90
+            ],
+            [
+              -180,
+              90
+            ],
+            [
+              -180,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 697
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              135,
+              0
+            ],
+            [
+              180,
+              0
+            ],
+            [
+              180,
+              45
+            ],
+            [
+              135,
+              45
+            ],
+            [
+              135,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 676
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -45,
+              -45
+            ],
+            [
+              0,
+              -45
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              -45,
+              0
+            ],
+            [
+              -45,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 559
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -180,
+              -45
+            ],
+            [
+              -135,
+              -45
+            ],
+            [
+              -135,
+              0
+            ],
+            [
+              -180,
+              0
+            ],
+            [
+              -180,
+              -45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 455
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              45,
+              0
+            ],
+            [
+              90,
+              0
+            ],
+            [
+              90,
+              45
+            ],
+            [
+              45,
+              45
+            ],
+            [
+              45,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 372
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              45,
+              -90
+            ],
+            [
+              90,
+              -90
+            ],
+            [
+              90,
+              -45
+            ],
+            [
+              45,
+              -45
+            ],
+            [
+              45,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 316
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              135,
+              45
+            ],
+            [
+              180,
+              45
+            ],
+            [
+              180,
+              90
+            ],
+            [
+              135,
+              90
+            ],
+            [
+              135,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 292
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              90,
+              -90
+            ],
+            [
+              135,
+              -90
+            ],
+            [
+              135,
+              -45
+            ],
+            [
+              90,
+              -45
+            ],
+            [
+              90,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 227
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              90,
+              0
+            ],
+            [
+              135,
+              0
+            ],
+            [
+              135,
+              45
+            ],
+            [
+              90,
+              45
+            ],
+            [
+              90,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 197
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -45,
+              -90
+            ],
+            [
+              0,
+              -90
+            ],
+            [
+              0,
+              -45
+            ],
+            [
+              -45,
+              -45
+            ],
+            [
+              -45,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 65
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -180,
+              -90
+            ],
+            [
+              -135,
+              -90
+            ],
+            [
+              -135,
+              -45
+            ],
+            [
+              -180,
+              -45
+            ],
+            [
+              -180,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 35
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              45,
+              45
+            ],
+            [
+              90,
+              45
+            ],
+            [
+              90,
+              90
+            ],
+            [
+              45,
+              90
+            ],
+            [
+              45,
+              45
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 30
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              -90
+            ],
+            [
+              45,
+              -90
+            ],
+            [
+              45,
+              -45
+            ],
+            [
+              0,
+              -45
+            ],
+            [
+              0,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -135,
+              -90
+            ],
+            [
+              -90,
+              -90
+            ],
+            [
+              -90,
+              -45
+            ],
+            [
+              -135,
+              -45
+            ],
+            [
+              -135,
+              -90
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "n": 1
+      }
+    }
+  ]
+}

@@ -8,7 +8,7 @@ import java.io.Reader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class FileReader {
+public abstract class FileReader {
 	
 	private static String readAll(Reader rd) throws IOException {
 		StringBuilder sb = new StringBuilder();
@@ -20,7 +20,12 @@ public class FileReader {
 	}
 	
 	
-	public JSONObject readFile(String pathOfJsonFile) throws IOException {
+	/**
+	 * @param pathOfJsonFile
+	 * @return JsonObject read from a Jsonfile
+	 * @throws IOException
+	 */
+	public static JSONObject readFile(String pathOfJsonFile) throws IOException {
 		Reader reader = new java.io.FileReader(pathOfJsonFile);
 		BufferedReader rd = new BufferedReader(reader);
 		String jsonText = readAll(rd);

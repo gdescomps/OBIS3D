@@ -120,6 +120,7 @@ public abstract class ApiResquester {
 	 * @throws Exception 
 	 */
 	public static JSONObject getExhaustiveReport(Species species, int precision) throws Exception {
+		System.out.println(species.getScientificName());
 		if(species.getScientificName()=="") {
 			throw new Exception("Nom de l'esp�ce non renseign�");
 		}
@@ -127,9 +128,9 @@ public abstract class ApiResquester {
 			throw new Exception("Pr�cision 0 non valide");
 		}
 		JSONObject jsonOccurence = new JSONObject();
-//		String newSpecies = species.getScientificName().replaceAll(" ", "%20");
+		String newSpecies = species.getScientificName().replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+species.getScientificName());
+			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -170,54 +171,4 @@ public abstract class ApiResquester {
 		return jsonOccurence;
 	}
 	
-	
-//	public static void main(String[] args) throws Exception {
-//		/*
-//		try {
-//			JSONObject jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/");
-//			JSONArray resultat = jsonOccurence.getJSONArray("results");
-//			JSONObject espece = resultat.getJSONObject(0); //Le premier element
-//			System.out.println(espece.getString("infraphylum"));
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//		*/
-//		
-//		//JSONObject jsonOccurence = getOccurrences("",2);   //test avec nom vide
-//		//JSONObject jsonOccurence = getOccurrences("Delphinidae",0);   //test precision 0
-//		//JSONObject jsonOccurence = getOccurrences("Morus bassanus",1); //test nom avec un espace	
-//		// JSONObject jsonOccurence = getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3),2); //test intervalle
-//
-//		/*
-//		JSONArray resultatRecherche = jsonOccurence.getJSONArray("features");
-//		JSONObject article = resultatRecherche.getJSONObject(0); //Le premier element
-//		System.out.println(article.getString("type"));
-//		*/
-//		
-//		/*
-//		JSONObject jsonOccurence = getOccurrences("Morus bassanus","spd"); //https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd
-//		JSONArray resultatRecherche = jsonOccurence.getJSONArray("results");
-//		JSONObject article = resultatRecherche.getJSONObject(0); 
-//		System.out.println(article.getString("country"));
-//		*/
-//		
-//		//TEST des 20 premiers noms
-//		/*
-//		JSONObject jsonOccurence = getOccurrences("ma");;
-//		JSONArray resultatRecherche = jsonOccurence.getJSONArray("search");
-//		JSONObject species = resultatRecherche.getJSONObject(0); 
-//		System.out.println(species.getString("scientificName"));
-//		*/
-//		
-//		//Test getSpecies
-//	
-//	
-////		System.out.println(getSpecies("morus bassanus"));
-//		Species species =new Species("Delphinidae");
-//		System.out.println(getOccurrences(species.getScientificName(), 3));
-////		System.out.println(getSpecies("mr"));
-////		System.out.println(getSpeciesNames("aa"));
-//		
-//
-//	}
 }
