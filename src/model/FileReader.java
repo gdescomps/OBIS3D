@@ -1,11 +1,8 @@
 package model;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class FileReader {

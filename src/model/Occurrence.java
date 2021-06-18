@@ -1,10 +1,10 @@
 package model;
 
-public class OccurrenceDetail {
+public class Occurrence {
 
-	private String order;
-	private String superClass;
-	private String recordedBy;
+	private String order="unknown";
+	private String superClass="unknown";
+	private String recordedBy="unknown";
 	private Species species;
 
 	/**

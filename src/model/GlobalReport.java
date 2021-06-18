@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class GlobalReport {
 	private Species species;
-	private int minOccurences;
-	private int maxOccurences;
+	private int minOccurrences;
+	private int maxOccurrences;
 	ArrayList<ZoneReport> zoneReports = new ArrayList<ZoneReport>();
 	
 	
@@ -40,39 +40,39 @@ public class GlobalReport {
 
 
 	/**
-	 * @param minOccurences the minOccurences to set
+	 * @param minOccurrences the minOccurrences to set
 	 */
-	public void setMinOccurences(int minOccurences) {
-		this.minOccurences = minOccurences;
+	public void setMinOccurrences(int minOccurrences) {
+		this.minOccurrences = minOccurrences;
 	}
 
 
 	/**
-	 * @param maxOccurences the maxOccurences to set
+	 * @param maxOccurrences the maxOccurrences to set
 	 */
-	public void setMaxOccurences(int maxOccurences) {
-		this.maxOccurences = maxOccurences;
+	public void setMaxOccurrences(int maxOccurrences) {
+		this.maxOccurrences = maxOccurrences;
 	}
 	
 	/**
-	 * @return minOccurences the minOccurences to get
+	 * @return minOccurrences the minOccurrences to get
 	 */
-	public int getMinOccurences() {
-		return this.minOccurences;
+	public int getMinOccurrences() {
+		return this.minOccurrences;
 	}
 
 
 	/**
-	 * @return maxOccurences the maxOccurences to get
+	 * @return maxOccurrences the maxOccurrences to get
 	 */
-	public int getMaxOccurences() {
-		return this.maxOccurences;
+	public int getMaxOccurrences() {
+		return this.maxOccurrences;
 	}
 	
 	@Override
 	public String toString() {
 		String result;
-		result = species + " \nmin occurence = " + minOccurences + " \nmax occurence = " + maxOccurences ;
+		result = species + " \nmin occurrence = " + minOccurrences + " \nmax occurrence = " + maxOccurrences ;
 		result += "\nzone report =" + zoneReports;
 		return result;
 	}

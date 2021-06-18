@@ -71,8 +71,8 @@ public class Model {
 				ZoneReport zoneReport = new ZoneReport(zone, occurenceCount);
 				globalReport.addZoneReport(zoneReport);
 			}
-			globalReport.setMaxOccurences(maxOccurence);
-			globalReport.setMinOccurences(minOccurence);
+			globalReport.setMaxOccurrences(maxOccurence);
+			globalReport.setMinOccurrences(minOccurence);
 			return globalReport;
 		}
 
@@ -90,32 +90,52 @@ public class Model {
 	 * @param geoHash
 	 * @return occurrenceList
 	 */
-	public ArrayList<OccurrenceDetail> getOccurrencesDetails(String scientificName, String geoHash){
-		ArrayList<OccurrenceDetail> occurrenceList = new ArrayList<OccurrenceDetail>();
+	public ArrayList<Occurrence> getOccurrencesDetails(String scientificName, String geoHash){
+		ArrayList<Occurrence> occurrenceList = new ArrayList<Occurrence>();
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences(scientificName,geoHash);
 		JSONArray result = jsonOccurrence.getJSONArray("results");
-		
-		for(int i=1;i<result.length();i++) { 
+		Species species = null;
+		if(result.getJSONObject(0).has("scientificName")) {
+			species = new Species(result.getJSONObject(0).getString("scientificName"));
+		}
+		Occurrence occurrence = new Occurrence();
+		occurrence.setSpecies(species);
+		for(int i=0;i<result.length();i++) { 
 			JSONObject element = result.getJSONObject(i); 
 			
-			OccurrenceDetail occurrence = new OccurrenceDetail();
-			if(scientificName!="") {
-				occurrence.setSpecies(new Species (scientificName));
-			}
 			if(element.has("order")) {
 				occurrence.setOrder(element.getString("order"));
 			}
-			if(element.has("taxonRemarks")){
-				occurrence.setRecordedBy(element.getString("taxonRemarks"));
+			if(element.has("recordedBy")){
+				occurrence.setRecordedBy(element.getString("recordedBy"));
 			}
 			if(element.has("superclass")) {
 				occurrence.setSuperclass(element.getString("superclass"));
 			}
+			if(element.has("bathymetry")) {
+				
+			}if(element.has("shoredistance")) {
+				
+			}if(element.has("eventDate")) {
+				
+			}	
 			occurrenceList.add(occurrence);
 		}
 		return occurrenceList;
 	}
 	
+	public ArrayList<String> getScientificNamesByGeoHash(String geoHash){
+		ArrayList<String> scientificNames = new ArrayList<>();
+		JSONObject jsonOccurrence = ApiResquester.getOccurrences("",geoHash);
+		JSONArray result = jsonOccurrence.getJSONArray("results");
+		for(int i=0;i<result.length();i++) { 
+			JSONObject element = result.getJSONObject(i); 
+			if(element.has("scientificName")) {
+				scientificNames.add(element.getString("scientificName"));
+			}
+		}
+		return scientificNames;
+	}
 	/**
 	 * Get the first 20 names of species starting with a string passed in parameter
 	 * @param nameStart
@@ -153,14 +173,13 @@ public class Model {
 		Model model = new Model();
 //		GlobalReport gb = model.getExhaustiveReport("Delphinidae");
 //		System.out.println(gb);
-		
 	
-		//ArrayList<OccurrenceDetail> od1 = model.getOccurrencesDetails("Protozoa", "spd"); //
-		ArrayList<OccurrenceDetail> od2 = model.getOccurrencesDetails("Delphinidae", "spd");
-		System.out.println(od2);
-		//ArrayList<OccurrenceDetail> od3 = model.getOccurrencesDetails("", "spd"); 
-		ArrayList<String> names = model.get20firstNames("porcel");
-		System.out.println(names);
+//		ArrayList<Occurrence> od1 = model.getOccurrencesDetails("Nitzschia longissima", "spd"); //
+//		ArrayList<Occurrence> od2 = model.getOccurrencesDetails("Delphinidae", "spd");
+//		System.out.println(od1);
+		ArrayList<String> s = model.getScientificNamesByGeoHash("spd");
+		System.out.println(s);
+
 
 	}
 //	

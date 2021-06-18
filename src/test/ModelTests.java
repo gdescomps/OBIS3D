@@ -3,11 +3,14 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import model.Model;
+import model.Occurrence;
 import model.ZoneReport;
 import model.ApiResquester;
 import model.GlobalReport;
@@ -34,21 +37,6 @@ class ModelTests {
 		 assertEquals(firstElement.getString("type"),"Feature");
 		
 	}
-	
-	
-//	@Test
-//	@DisplayName("Test getOccurrences per region for a species without name passed in parameter")
-//	void testOccurencesOfSpeciesInRegionWithoutName() throws Exception {
-//		
-//		//assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/1?scientificname="), ApiResquester.getOccurrences("",1));
-//	}
-//	
-//	@Test
-//	@DisplayName("Test getOccurrences per region for a species with 0 precision passed in parameter")
-//	void testOccurencesOfSpeciesInRegionWithoutPrecision() throws Exception {
-//		
-//		//assertEquals(ApiResquester.readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/0?scientificname=Morus%20Bassanus"), ApiResquester.getOccurrences("Morus Bassanus",0));
-//	}
 	
 	@Test
 	@DisplayName("Test getOccurrences per region for a species name and between two dates passed in parameter")
@@ -91,19 +79,35 @@ class ModelTests {
 	void testOccurrencesOf20firstNames() {
 		JSONObject jsonOccurrence = ApiResquester.getSpeciesNames("ma");;
 		JSONArray result = jsonOccurrence.getJSONArray("search");
-		boolean notFailed = true;
 		if(result.length()<=20) { 
 			int i=0;
-			while(i<result.length() && notFailed==true) { //we loop on the json objects to see if all the scientific names are correct
+			while(i<result.length()) { //we loop on the json objects to see if all the scientific names are correct
 				if(!result.getJSONObject(i).getString("scientificName").substring(0, 2).equals("Ma")) { //they all need to have a "Ma" at the beginning
-					notFailed = false;
+					fail("the name is incorrect");
 				}
 				i++;
 			}
 		}else { //if the json has a size greater than 20 there is a problem
-			notFailed = false;
+			fail("the array list has a size greater than 20");
 		}
-		assertTrue(notFailed);
+	}
+	
+	@Test
+	@DisplayName("Test get 20 first names")
+	void testGet20firstNames() {
+		Model model = new Model();
+		ArrayList<String> listOfNames = model.get20firstNames("a");
+		if(listOfNames.size()<=20) { 
+			int i=0;
+			while(i<listOfNames.size()) { //we loop on the array list if all the scientific names are correct
+				if(!listOfNames.get(0).substring(0, 1).equals("A")) { //they all need to have a "A" at the beginning
+					fail("the name is incorrect");
+				}
+				i++;
+			}
+		}else { //if the array list has a size greater than 20 there is a problem
+			fail("the array list has a size greater than 20");
+		}
 	}
 	
 	@Test
@@ -127,10 +131,10 @@ class ModelTests {
 		GlobalReport globalReport = model.getExhaustiveReport("Delphinidae");
 		ZoneReport zoneReport = globalReport.getZoneReport().get(0);
 		//Test of the values of the global report
-		if(globalReport.getMaxOccurences()!=8147) { 
+		if(globalReport.getMaxOccurrences()!=8147) { 
 			fail("maxOccurence is wrong");			
 
-		}else if(globalReport.getMinOccurences()!=1) {
+		}else if(globalReport.getMinOccurrences()!=1) {
 			fail("minOccurence is wrong");			
 		}
 		else if(globalReport.getSpecies().getScientificName()!="Delphinidae") { //if the name is wrong
@@ -144,7 +148,45 @@ class ModelTests {
 			fail("First zone coordinate is wrong");
 		}
 	}
+	
 
+	@Test
+	@DisplayName("Test getOccurrencesDetails")
+	void testGetOccurrencesDetails() {
+		Model model = new Model();
+		//Test of a request with name and geohash passed in parameter
+		ArrayList<Occurrence> occurrences = model.getOccurrencesDetails("Delphinidae", "spd");
+		//Test of the first element
+		if(!occurrences.get(0).getOrder().equals("Cetartiodactyla")) {
+			fail("the order is wrong");
+		};
+		if(!occurrences.get(0).getSuperclass().equals("Tetrapoda")) {
+			fail("the superclass is wrong");
+		};
+		if(!occurrences.get(0).getRecordedBy().equals("Taxon recorded as \"Stenella coeruleoalba\" by the provider")) {
+			fail("the recordedby is wrong");
+		};
+		if(!occurrences.get(0).getSpecies().getScientificName().equals("Stenella coeruleoalba")) {
+			fail("the name is wrong");
+		};
+		
+		//Test of a request without name passed in parameter
+		ArrayList<Occurrence> otherOccurrences = model.getOccurrencesDetails("", "spp");
+		//Test values of the third element
+		if(!otherOccurrences.get(2).getOrder().equals("Myliobatiformes")) {
+			fail("the order is wrong");
+		};
+		if(!otherOccurrences.get(2).getSuperclass().equals("Pisces")) {
+			fail("the superclass is wrong");
+		};
+		if(!otherOccurrences.get(2).getRecordedBy().equals("Taxon recorded as \"Giant devil ray\" by the provider")) {
+			fail("the recordedby is wrong");
+		};
+		if(!otherOccurrences.get(2).getSpecies().getScientificName().equals("Mobula mobular")) {
+			fail("the name is wrong");
+		};
+	}
+	
 	/*
 	@Test
 	@DisplayName("Fail Test")

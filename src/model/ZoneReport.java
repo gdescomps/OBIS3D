@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ZoneReport {
 	private ArrayList<Point2D> zone = new ArrayList<Point2D>(5);
 	private int occurenceCount;
-	private ArrayList<Occurence> occurences = new ArrayList<Occurence>();
+	private ArrayList<Occurrence> occurences = new ArrayList<Occurrence>();
 	
 
 	/**
@@ -27,7 +27,7 @@ public class ZoneReport {
 	 * @param occurenceCount
 	 * @param occurences
 	 */
-	public ZoneReport(ArrayList<Point2D> zone, int occurenceCount, ArrayList<Occurence> occurences) {
+	public ZoneReport(ArrayList<Point2D> zone, int occurenceCount, ArrayList<Occurrence> occurences) {
 		this.zone = zone;
 		this.occurenceCount = occurenceCount;
 		this.occurences = occurences;
@@ -65,14 +65,14 @@ public class ZoneReport {
 	/**
 	 * @param occurences the occurences to set
 	 */
-	public void setOccurences(ArrayList<Occurence> occurences) {
+	public void setOccurences(ArrayList<Occurrence> occurences) {
 		this.occurences = occurences;
 	}
 	
 	/**
 	 * @return the occurences
 	 */
-	public ArrayList<Occurence> getOccurences() {
+	public ArrayList<Occurrence> getOccurences() {
 		return this.occurences;
 	}
 	
