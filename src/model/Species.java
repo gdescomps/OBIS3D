@@ -23,5 +23,9 @@ public class Species {
 		this.scientificName = scientificName;
 	}
 	
+	@Override
+	public String toString() {
+		return "\nSpecies name = " + scientificName;
+	}
 
 }

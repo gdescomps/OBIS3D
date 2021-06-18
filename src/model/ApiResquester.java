@@ -15,8 +15,13 @@ import java.time.Period;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ApiResquester {
-
-	public static JSONObject readJsonFromUrl(String url) {
+	
+	/**
+	 * Get json from an url
+	 * @param url
+	 * @return json the json string
+	 */
+	public static String readJsonFromUrl(String url) {
 		String json = "";
 		HttpClient client = HttpClient.newBuilder()
 				.version(Version.HTTP_1_1)
@@ -35,89 +40,116 @@ public abstract class ApiResquester {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		return json;
+	}
+	
+	/**
+	 * Get json object from an url
+	 * @param url
+	 * @return json the json object
+	 */
+	public static JSONObject readJsonObjectFromUrl(String url) {
+		String json = readJsonFromUrl(url);
 		return new JSONObject(json);
 	}
 	
+	/**
+	 * Get json array from an url
+	 * @param url
+	 * @return json the json array
+	 */
 	public static JSONArray readJsonArrayFromUrl(String url) {
-		String json = "";
-		HttpClient client = HttpClient.newBuilder()
-				.version(Version.HTTP_1_1)
-				.followRedirects(Redirect.NORMAL)
-				.connectTimeout(Duration.ofSeconds(20))
-				.build();
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.timeout(Duration.ofMinutes(2))
-				.header("Content-Type", "application/json")
-				.GET()
-				.build();
-		try {
-			json = client.sendAsync(request, BodyHandlers.ofString())
-					.thenApply(HttpResponse::body).get(10,TimeUnit.SECONDS);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		String json = readJsonFromUrl(url);
 		return new JSONArray(json);
 	}
 	
-	//R�cup�rer le nombre de signalement par r�gion pour un nom d�esp�ce pass� en param�tre
-	//Species , GeoHash 
-	//Ex : https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae
-	public static JSONObject getOccurrences(String species, int precision) throws Exception {
-		if(species=="") {
+
+	/**
+	 * Get the number of records per region for a species name passed in parameter
+	 * Ex : https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae
+	 * @param scientificName
+	 * @param precision
+	 * @return jsonOccurence
+	 * @throws Exception
+	 */
+	public static JSONObject getOccurrences(String scientificName, int precision) throws Exception {
+		if(scientificName=="") {
 			throw new Exception("Nom de l'esp�ce non renseign�");
 		}
 		else if(precision==0) {
 			throw new Exception("Pr�cision 0 non valide");
 		}
-		JSONObject jsonOccurence = new JSONObject();
-		String newSpecies = species.replaceAll(" ", "%20");
+		JSONObject jsonOccurrence = new JSONObject();
+		String newScientificName = scientificName.replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies);
+			jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newScientificName);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return jsonOccurence;
-	}
-	
-	//R�cup�rer le nombre de signalement par r�gion pour un nom d�esp�ce et entre deux dates pass� en param�tre
-	//Ex: https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23
-	public static  JSONObject getOccurrences(String species, int precision, LocalDateTime beginDate, Period interval, int intervalCount) {
-		LocalDateTime endDate = beginDate.plus(interval);
-		JSONObject jsonOccurence = new JSONObject();	
-		String newSpecies = species.replaceAll(" ", "%20");
-		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies+"&startdate="+ beginDate.toLocalDate() +"&enddate="+endDate.toLocalDate());
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return jsonOccurence;
-	}
-	
-	//R�cup�rer les d�tails d�enregistrement pour un nom d�esp�ce pass� en param�tre et un GeoHash
-	//Ex : https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd  avec nom
-	//Ex: https://api.obis.org/v3/occurrence?geometry=spd  sans nom
-	public static JSONObject getOccurrences(String species, String geoHash) {
-		JSONObject jsonOccurence = new JSONObject();	
-		String newSpeciesName = species.replaceAll(" ", "%20");
-		try {
-			if(species=="") {
-				jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence?&geometry="+geoHash);
-			}
-			else{
-				jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence?scientificname="+newSpeciesName+"&geometry="+geoHash);
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return jsonOccurence;
+		return jsonOccurrence;
 	}
 	
 
 	/**
-	 * R�cup�rer le nombre de signalement par r�gion pour un nom d�esp�ce pass� en param�tre 
+	 * Get the number of records per region for a species name and between two dates passed in parameter
+	 * Ex: https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23
+	 * @param scientificName
+	 * @param precision
+	 * @param beginDate
+	 * @param interval
+	 * @param intervalCount
+	 * @return jsonOccurence
+	 */
+	public static  JSONObject getOccurrences(String scientificName, int precision, LocalDateTime beginDate, Period interval) {
+
+		LocalDateTime endDate = beginDate.plus(interval);
+		JSONObject jsonOccurrence = new JSONObject();	
+		String newScientificName = scientificName.replaceAll(" ", "%20");
+		try {
+			jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newScientificName+"&startdate="+ beginDate.toLocalDate() +"&enddate="+endDate.toLocalDate());
+
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return jsonOccurrence;
+	}
+	
+
+
+	/**
+	 * Get record details for a parameter species name and a GeoHash
+	 * Ex : https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd  with name
+	 * Ex: https://api.obis.org/v3/occurrence?geometry=spd  without name
+	 * @param species
+	 * @param geoHash
+	 * @return jsonOccurence
+	 */
+	public static JSONObject getOccurrences(String scientificName, String geoHash) {
+		JSONObject jsonOccurrence = new JSONObject();	
+		String newScientificName = scientificName.replaceAll(" ", "%20");
+
+		try {
+			if(scientificName=="") {
+				jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/occurrence?&geometry="+geoHash);
+			}
+			else{
+				jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/occurrence?scientificname="+newScientificName+"&geometry="+geoHash);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return jsonOccurrence;
+	}
+	
+
+	/**
+
+	 * Get the number of records per region for a species name passed in parameter 
 	 * Ex: https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae
-	 * @throws Exception 
+	 * @param species
+	 * @param precision
+	 * @return jsonOccurence
+	 * @throws Exception
 	 */
 	public static JSONObject getExhaustiveReport(Species species, int precision) throws Exception {
 		System.out.println(species.getScientificName());
@@ -127,48 +159,55 @@ public abstract class ApiResquester {
 		else if(precision==0) {
 			throw new Exception("Pr�cision 0 non valide");
 		}
-		JSONObject jsonOccurence = new JSONObject();
+
+		JSONObject jsonOccurrence = new JSONObject();
 		String newSpecies = species.getScientificName().replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies);
+			jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies);
+
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return jsonOccurence;
+		return jsonOccurrence;
 	}
 	
-	
+
 	/**
-	 * R�cup�rer les 20 premiers noms scientifiques d�esp�ce commen�ant par une cha�ne de caract�res pass�e en param�tre
-	 * Ex: https://api.obis.org/v3/taxon/complete/verbose/ma
+	 * Get the first 20 scientific names of species starting with a string passed in parameter
+	 * Ex: https://api.obis.org/v3/taxon/complete/verbose/ma 
+	 * @param nameStart
+	 * @return jsonOccurence
 	 */
-	public static  JSONObject getSpeciesNames(String string) {
-		JSONObject jsonOccurence = new JSONObject();	
-		JSONArray jsonArrayOccurence = new JSONArray();
-		String newString = string.replaceAll(" ", "%20");
+	public static  JSONObject getSpeciesNames(String nameStart) {
+		JSONObject jsonOccurrence = new JSONObject();	
+		JSONArray jsonArrayOccurrence = new JSONArray();
+		String newScientificName = nameStart.replaceAll(" ", "%20");
 		try {
-			jsonArrayOccurence= readJsonArrayFromUrl("https://api.obis.org/v3/taxon/complete/verbose/"+newString);
+			jsonArrayOccurrence= readJsonArrayFromUrl("https://api.obis.org/v3/taxon/complete/verbose/"+newScientificName);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		jsonOccurence.put("search",jsonArrayOccurence);
-		return jsonOccurence;
+		jsonOccurrence.put("search",jsonArrayOccurrence);
+		return jsonOccurrence;
 	}
 	
 	
 	/**
+	 * Get the occurences of a species 
 	 * Ex: https://api.obis.org/v3/taxon/morus 
+	 * @param scientificName
+	 * @return jsonOccurence
 	 */
-	public static  JSONObject getSpecies(String nameStart) {
-		JSONObject jsonOccurence = new JSONObject();	
-		String newNameStart = nameStart.replaceAll(" ", "%20");
+	public static  JSONObject getSpecies(String scientificName) {
+		JSONObject jsonOccurrence = new JSONObject();	
+		String newScientificName = scientificName.replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/taxon/"+newNameStart);
+			jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/taxon/"+newScientificName);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return jsonOccurence;
+
+		return jsonOccurrence;
 	}
-	
 }
