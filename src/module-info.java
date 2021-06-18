@@ -8,6 +8,8 @@ module OBIS3D {
 	requires org.json;
 	requires org.junit.jupiter.api;
 	requires javafx.base;
+	requires jimObjModelImporterJFX;
+	requires javafx.graphics;
 	
 	opens application to javafx.graphics;
 	opens view to javafx.fxml, javafx.base;
