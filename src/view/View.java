@@ -2,6 +2,7 @@ package view;
 
 import controller.Controller;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -12,7 +13,14 @@ public class View {
 
 	public View(Stage primaryStage) {
 		try {
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+			  
+			  //On définit la vue comme contrôleur de ce fichier
+			  loader.setController(this);
+			  
+			  //On charge le fichier FXML, il appellera la méthode *initialize()* de la vue
+			  Parent root = loader.load();
+			  
 			Scene scene = new Scene(root,800,600);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
@@ -21,6 +29,8 @@ public class View {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 
 	/**

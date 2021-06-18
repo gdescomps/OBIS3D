@@ -20,8 +20,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.stage.Stage;
 
-public class MainWindowController implements Initializable {
+public class MainWindowController  extends View implements Initializable{
+	
+	public MainWindowController(Stage primaryStage) {
+		super(primaryStage);
+	}
+
 	@FXML
 	private Pane viewPane;
 	
@@ -38,22 +44,8 @@ public class MainWindowController implements Initializable {
 //		table = new TableView();
 		
 
-        table.setEditable(true);
- 
-        TableColumn<ZoneEntry, String> occurenceCountCol = new TableColumn<ZoneEntry, String>("Occurences count");
-        TableColumn<ZoneEntry, String> zonePointsCol = new TableColumn<ZoneEntry, String>("Zone points");
         
-        final ObservableList<ZoneEntry> data = FXCollections.observableArrayList(
-    	    new ZoneEntry("24", "1,2,3,4")
-    	);
-        
-        table.setItems(data);
-        
-        occurenceCountCol.setCellValueFactory(new PropertyValueFactory<>("occurenceCount"));
-        zonePointsCol.setCellValueFactory(new PropertyValueFactory<>("zonePoints"));
-        
-        table.getColumns().addAll(occurenceCountCol, zonePointsCol);
-        
+        startReport();
         
 		
 		//Create a Pane et graph scene root for the 3D content
@@ -91,7 +83,28 @@ public class MainWindowController implements Initializable {
 		subscene.heightProperty().bind(viewPane.heightProperty());
 		subscene.widthProperty().bind(viewPane.widthProperty());
 		subscene.setManaged(false);
-		
-		
+	
 	}
+	
+	public void startReport() {
+		table.setEditable(true);
+		 
+        TableColumn<ZoneEntry, String> occurenceCountCol = new TableColumn<ZoneEntry, String>("Occurences count");
+        TableColumn<ZoneEntry, String> zonePointsCol = new TableColumn<ZoneEntry, String>("Zone points");
+        
+        final ObservableList<ZoneEntry> data = FXCollections.observableArrayList(
+    	    new ZoneEntry("24", "1,2,3,4")
+    	);
+        
+//        this.getController().getExhaustiveReport();
+        
+        
+        table.setItems(data);
+        
+        occurenceCountCol.setCellValueFactory(new PropertyValueFactory<>("occurenceCount"));
+        zonePointsCol.setCellValueFactory(new PropertyValueFactory<>("zonePoints"));
+        
+        table.getColumns().addAll(occurenceCountCol, zonePointsCol);
+	}
+	
 }
