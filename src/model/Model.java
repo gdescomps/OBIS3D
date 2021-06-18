@@ -3,6 +3,8 @@ package model;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -88,7 +90,40 @@ public class Model {
 		return createExhaustiveReport(jsonObject, species);
 	}
 	
+	/**
+	 * @param scientificName
+	 * @param geoHashPrecision
+	 * @param beginDate
+	 * @param interval
+	 * @param intervalCount
+	 * @return an ArrayList of Global reports of the species for each period of time 
+	 */
+	public ArrayList<GlobalReport> getZoneReportsbyTimePeriods(String scientificName, int geoHashPrecision, LocalDateTime beginDate, Period interval, int intervalCount){
+		
+		Species species = new Species(scientificName);
+		
+		// Instantiate the JSONObject
+		JSONObject jsonObject = new JSONObject();
+		
+		// Instantiate the ZoneReportsbyTimePeriods
+		ArrayList<GlobalReport> zoneReportsbyTimePeriods = new ArrayList<GlobalReport>();
+		
+		LocalDateTime newBeginDate = beginDate;
+		
+		for (int i = 0; i<intervalCount; i++) {
+			jsonObject = ApiResquester.getOccurrences(scientificName, geoHashPrecision, newBeginDate, interval);
+			newBeginDate = newBeginDate.plus(interval);
+			
+			// Create the Global Report of the Species
+			GlobalReport globalReport = createExhaustiveReport(jsonObject, species);
+			zoneReportsbyTimePeriods.add(globalReport);
+		}
+		
+		return zoneReportsbyTimePeriods;
+	}
 	
+	/// This function treats the jsonObject and make a Global Report out of it
+	/// It's used in : getExhaustiveReport & getExhaustiveReportFromLocal & getZoneReportsbyTimePeriods
 	/**
 	 * @param jsonObject
 	 * @param species
@@ -125,6 +160,16 @@ public class Model {
 		globalReport.setMinOccurences(minOccurence);
 		return globalReport;
 		
-	}	
+	}
 
 }
+
+
+
+
+
+
+
+
+
+

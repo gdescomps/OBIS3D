@@ -12,19 +12,17 @@ public class ZoneReport {
 	
 
 	
+/// Constructors :
 	
 	/**
 	 * @param zone
 	 * @param occurenceCount
 	 */
 	public ZoneReport(ArrayList<Point2D> zone, int occurenceCount) {
-		super();
 		this.zone = zone;
 		this.occurenceCount = occurenceCount;
 	}
-
-
-
+	
 	/**
 	 * @param zone
 	 * @param occurenceCount
@@ -36,6 +34,8 @@ public class ZoneReport {
 		this.occurences = occurences;
 	}
 
+	
+	
 /// Setters :
 
 	/**
@@ -44,12 +44,14 @@ public class ZoneReport {
 	public void setZone(ArrayList<Point2D> zone) {
 		this.zone = zone;
 	}
+	
 	/**
 	 * @param occurenceCount the occurenceCount to set
 	 */
 	public void setOccurenceCount(int occurenceCount) {
 		this.occurenceCount = occurenceCount;
 	}
+	
 	/**
 	 * @param occurences the occurences to set
 	 */

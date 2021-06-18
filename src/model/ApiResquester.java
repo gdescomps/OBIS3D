@@ -82,12 +82,14 @@ public abstract class ApiResquester {
 	
 	//Récupérer le nombre de signalement par région pour un nom d’espèce et entre deux dates passé en paramètre
 	//Ex: https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23
-	public static  JSONObject getOccurrences(String species, int precision, LocalDateTime beginDate, Period interval, int intervalCount) {
+	public static  JSONObject getOccurrences(String species, int precision, LocalDateTime beginDate, Period interval) {
 		LocalDateTime endDate = beginDate.plus(interval);
 		JSONObject jsonOccurence = new JSONObject();	
 		String newSpecies = species.replaceAll(" ", "%20");
 		try {
-			jsonOccurence= readJsonFromUrl("https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies+"&startdate="+ beginDate.toLocalDate() +"&enddate="+endDate.toLocalDate());
+			String URL = "https://api.obis.org/v3/occurrence/grid/"+precision+"?scientificname="+newSpecies+"&startdate="+ beginDate.toLocalDate() +"&enddate="+endDate.toLocalDate();
+			System.out.println(URL);
+			jsonOccurence= readJsonFromUrl(URL);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -187,14 +189,10 @@ public abstract class ApiResquester {
 		//JSONObject jsonOccurence = getOccurrences("",2);   //test avec nom vide
 		//JSONObject jsonOccurence = getOccurrences("Delphinidae",0);   //test precision 0
 		//JSONObject jsonOccurence = getOccurrences("Morus bassanus",1); //test nom avec un espace	
-		// JSONObject jsonOccurence = getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3),2); //test intervalle
+//		 JSONObject jsonOccurence = getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3)); //test intervalle
 
-		/*
-		JSONArray resultatRecherche = jsonOccurence.getJSONArray("features");
-		JSONObject article = resultatRecherche.getJSONObject(0); //Le premier element
-		System.out.println(article.getString("type"));
-		*/
 		
+	
 		/*
 		JSONObject jsonOccurence = getOccurrences("Morus bassanus","spd"); //https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd
 		JSONArray resultatRecherche = jsonOccurence.getJSONArray("results");
@@ -212,7 +210,7 @@ public abstract class ApiResquester {
 		
 		//Test getSpecies
 //		System.out.println(getSpecies("morus bassanus"));
-		Species species =new Species("Delphinidae");
+//		Species species =new Species("Delphinidae");
 //		System.out.println(getExhaustiveReport(species, 1));
 //		System.out.println(getSpecies("Delphinidae"));
 //		System.out.println(getSpeciesNames("aa"));
