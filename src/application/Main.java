@@ -15,10 +15,12 @@ public class Main extends Application {
 		
 		System.out.println("Starting...");
 		
-		Model model = new Model();
-		View view = new MainWindowController(primaryStage);
+		Controller controller = new Controller();
 		
-		Controller controller = new Controller(model, view);
+		Model model = new Model(controller);
+		View view = new MainWindowController(controller, primaryStage);
+		
+		
 		
 		
 		

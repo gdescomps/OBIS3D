@@ -26,7 +26,9 @@ public class Model {
 	public Model() {
 	}
 
-	
+	public Model(Controller controller) {
+		this.setController(controller);
+	}
 	
 /// Getters :
 	
@@ -46,6 +48,7 @@ public class Model {
 	 */
 	public void setController(Controller controller) {
 		this.controller = controller;
+		this.controller.setModel(this);
 	}
 	
 	
@@ -105,7 +108,8 @@ public class Model {
 		int minOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
 		int maxOccurence = features.getJSONObject(0).getJSONObject("properties").getInt("n");
 		
-		for (int i=0; i<3; i++) {
+		
+		for (int i=0; i<features.length(); i++) {
 			// Occurence Count :
 			int occurenceCount = features.getJSONObject(i).getJSONObject("properties").getInt("n");
 			

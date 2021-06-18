@@ -3,6 +3,7 @@ package view;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import controller.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,8 +25,8 @@ import javafx.stage.Stage;
 
 public class MainWindowController  extends View implements Initializable{
 	
-	public MainWindowController(Stage primaryStage) {
-		super(primaryStage);
+	public MainWindowController(Controller controller, Stage primaryStage) {
+		super(controller, primaryStage);
 	}
 
 	@FXML
@@ -73,7 +74,6 @@ public class MainWindowController  extends View implements Initializable{
 		
 		SubScene subscene = new SubScene(root3D,0,0,true,SceneAntialiasing.BALANCED);
 		
-		System.out.println(viewPane.getWidth()+" "+viewPane.getHeight());
 		subscene.setCamera(camera);
 		subscene.setFill(Color.GREY);
 		
@@ -87,16 +87,13 @@ public class MainWindowController  extends View implements Initializable{
 	}
 	
 	public void startReport() {
-		table.setEditable(true);
+		table.setEditable(false);
 		 
-        TableColumn<ZoneEntry, String> occurenceCountCol = new TableColumn<ZoneEntry, String>("Occurences count");
-        TableColumn<ZoneEntry, String> zonePointsCol = new TableColumn<ZoneEntry, String>("Zone points");
+        TableColumn<ZoneEntry, String> occurenceCountCol = new TableColumn<ZoneEntry, String>("Count");
+        TableColumn<ZoneEntry, String> zonePointsCol = new TableColumn<ZoneEntry, String>("Zone");
         
-        final ObservableList<ZoneEntry> data = FXCollections.observableArrayList(
-    	    new ZoneEntry("24", "1,2,3,4")
-    	);
         
-//        this.getController().getExhaustiveReport();
+        ObservableList<ZoneEntry> data = this.getController().getExhaustiveReport();
         
         
         table.setItems(data);

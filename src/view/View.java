@@ -9,9 +9,12 @@ import javafx.stage.Stage;
 
 public class View {
 	
-	Controller controller;
+	protected Controller controller;
 
-	public View(Stage primaryStage) {
+	public View(Controller controller, Stage primaryStage) {
+		
+		this.setController(controller);
+		
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			  
@@ -45,6 +48,7 @@ public class View {
 	 */
 	public void setController(Controller controller) {
 		this.controller = controller;
+		this.controller.setView(this);
 	}
 	
 	
