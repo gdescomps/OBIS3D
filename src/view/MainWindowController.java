@@ -41,6 +41,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
@@ -51,6 +52,7 @@ public class MainWindowController  extends View implements Initializable{
     
     private Group earth;
     private Group root3D;
+    private Group legend;
 	
 	public MainWindowController(Controller controller, Stage primaryStage) {
 		super(controller, primaryStage);
@@ -115,6 +117,8 @@ public class MainWindowController  extends View implements Initializable{
 		
 		viewPane.getChildren().addAll(subscene);
 		
+		legend = new Group();
+		viewPane.getChildren().add(legend);
 		
 		
 		// Resize the subscene according to viewPane size
@@ -124,6 +128,9 @@ public class MainWindowController  extends View implements Initializable{
 		
 		
 		startReport();
+		
+//		addBar(root3D, 45,45);
+		
 	}
 	
 	public void startReport() {
@@ -159,24 +166,31 @@ public class MainWindowController  extends View implements Initializable{
         
         
 //        System.out.println(globalReport.getMinOccurrences()+" "+globalReport.getMaxOccurrences());
-        System.out.println(globalReport.getZoneReports().size());
+//        System.out.println(globalReport.getZoneReports().size());
         
-        float max = globalReport.getMaxOccurences();
+        displayReportOnGlobe(globalReport);
         
+	}
+	
+	
+	private void displayReportOnGlobe(GlobalReport globalReport) {
+		float max = globalReport.getMaxOccurences();
+        
+		
         for (ZoneReport zoneReport : globalReport.getZoneReports()) {
 			PhongMaterial material = new PhongMaterial();
-			
 			
 			float colorCoeff = zoneReport.getOccurrenceCount()/globalReport.getMaxOccurences();
 			float occurenceCount = zoneReport.getOccurrenceCount();
 			
-			
-			
-//			max     -> 1
-//			max/2   -> 0.8
-//			max/2^2 -> 0.6
-//			max/2^3 -> 0.4
-//			max/2^4 -> 0.2
+//			Logarithmic color scale : 
+//			occurenceCount 	-> colorCoeff
+//
+//			max     		-> 1
+//			max/2   		-> 0.8
+//			max/2^2 		-> 0.6
+//			max/2^3 		-> 0.4
+//			max/2^4 		-> 0.2
 			for (int n = 4; n >= 0; n--) {
 				if(occurenceCount < max / Math.pow(2,n)) {
 
@@ -191,7 +205,7 @@ public class MainWindowController  extends View implements Initializable{
 			}
 
 			
-			System.out.println(occurenceCount+" "+colorCoeff);
+//			System.out.println(occurenceCount+" "+colorCoeff);
 			
 			
 			material.setDiffuseColor(getColor(colorCoeff).deriveColor(1, 1, 1, 0.2));
@@ -204,59 +218,84 @@ public class MainWindowController  extends View implements Initializable{
 					material);
 		}
         
-//        Rectangle background = new Rectangle(100,100,Color.color(1,1,1,0.2));
-        
-        Text t = new Text(10, 15, "Legend");
-        t.setFont(new Font(13));
-        
-        viewPane.getChildren().addAll(t);
-        
-//		max     -> 1
-//		max/2   -> 0.8
-//		max/2^2 -> 0.6
-//		max/2^3 -> 0.4
-//		max/2^4 -> 0.2
-        for (int n = 0; n <= 4; n++) {
-        	Rectangle colorBox = new Rectangle(35,12, getColor(1f-(0.2f*n)));
-        	colorBox.relocate(10,12*n+20);
-        	
-        	Text elementText = new Text(11, 15, new DecimalFormat("#").format(max/Math.pow(2,n)));
-            elementText.setFont(new Font(12));
-            elementText.relocate(50,12*n+20);
-        	
-        	viewPane.getChildren().addAll(colorBox, elementText);
-        }
-        int i=0;
-        for(float x=0.01f; x>0.001; x=x-0.002f) {
-        	
-        
-	        float a = (float) (0.2f/ (max/Math.pow(2,4)));
-			float c = (float) (max/Math.pow(2,4));
-			float b = 1f-(0.2f*4);
-			float occurenceCount = (x - b) / a + c;
-			
-			Rectangle colorBox = new Rectangle(35,12, getColor(x));
-	    	colorBox.relocate(10,12*i+12*5+20);
-	    	
-	    	Text elementText = new Text(11, 15, new DecimalFormat("#").format(occurenceCount));
-	        elementText.setFont(new Font(12));
-	        elementText.relocate(50,12*i+12*5+20);
-	    	
-	    	viewPane.getChildren().addAll(colorBox, elementText);
-	    	
-	    	i++;
-        }
-        
-        Rectangle colorBox = new Rectangle(35,12, getColor(0));
-    	colorBox.relocate(10,12*i+12*5+20);
-    	
-    	Text elementText = new Text(11, 15, "~0");
-        elementText.setFont(new Font(12));
-        elementText.relocate(50,12*i+12*5+20);
-    	
-    	viewPane.getChildren().addAll(colorBox, elementText);
-        
+        updateLegend(max);
+
 	}
+	
+	private void updateLegend(float max) {
+		
+		legend.getChildren().clear();
+        
+	//      Rectangle background = new Rectangle(100,100,Color.color(1,1,1,0.2));
+	      
+	      Text t = new Text(10, 15, "Legend");
+	      t.setFont(new Font(13));
+	      
+	      legend.getChildren().addAll(t);
+	      
+	//		max     -> 1
+	//		max/2   -> 0.8
+	//		max/2^2 -> 0.6
+	//		max/2^3 -> 0.4
+	//		max/2^4 -> 0.2
+	      for (int n = 0; n <= 4; n++) {
+	      	Rectangle colorBox = new Rectangle(35,12, getColor(1f-(0.2f*n)));
+	      	colorBox.relocate(10,12*n+20);
+	      	
+	      	Text elementText = new Text(11, 15, new DecimalFormat("#").format(max/Math.pow(2,n)));
+	          elementText.setFont(new Font(12));
+	          elementText.relocate(50,12*n+20);
+	      	
+	          legend.getChildren().addAll(colorBox, elementText);
+	      }
+	      int i=0;
+	      for(float x=0.01f; x>0.001; x=x-0.002f) {
+	      	
+	      
+		        float a = (float) (0.2f/ (max/Math.pow(2,4)));
+				float c = (float) (max/Math.pow(2,4));
+				float b = 1f-(0.2f*4);
+				float occurenceCount = (x - b) / a + c;
+				
+				Rectangle colorBox = new Rectangle(35,12, getColor(x));
+		    	colorBox.relocate(10,12*i+12*5+20);
+		    	
+		    	Text elementText = new Text(11, 15, new DecimalFormat("#").format(occurenceCount));
+		        elementText.setFont(new Font(12));
+		        elementText.relocate(50,12*i+12*5+20);
+		    	
+		        legend.getChildren().addAll(colorBox, elementText);
+		    	
+		    	i++;
+	      }
+	      
+	      Rectangle colorBox = new Rectangle(35,12, getColor(0));
+	  	colorBox.relocate(10,12*i+12*5+20);
+	  	
+	  	Text elementText = new Text(11, 15, "~0");
+	      elementText.setFont(new Font(12));
+	      elementText.relocate(50,12*i+12*5+20);
+	  	
+	      legend.getChildren().addAll(colorBox, elementText);
+	}
+	
+	private void addBar(Group root3d2, double latitude, double longitude) {
+				
+		Point3D from = geoCoordTo3dCoord(latitude, longitude);
+		Box box = new Box(0.01f,0.01f,1f);
+
+		Point3D to = Point3D.ZERO;
+		Point3D yDir = new Point3D(0, 1, 0);
+
+		Group group = new Group();
+		Affine affine = new Affine();
+		affine.append( lookAt(from,to,yDir));
+		group.getTransforms().setAll(affine); 
+		group.getChildren().addAll(box);
+
+		root3d2.getChildren().addAll(group);
+	}
+	
 	
 	private Color getColor(float colorCoeff) {
 		float redCoeff = colorCoeff > 0.01 ? colorCoeff : 0;
@@ -265,6 +304,16 @@ public class MainWindowController  extends View implements Initializable{
 		
 		return Color.color(redCoeff, greenCoeff, blueCoeff);
 	}
+	
+	private static Affine lookAt(Point3D from, Point3D to, Point3D ydir) {
+	    Point3D zVec = to.subtract(from).normalize();
+	    Point3D xVec = ydir.normalize().crossProduct(zVec).normalize();
+	    Point3D yVec = zVec.crossProduct(xVec).normalize();
+	    return new Affine(xVec.getX(), yVec.getX(), zVec.getX(), from.getX(),
+	                      xVec.getY(), yVec.getY(), zVec.getY(), from.getY(),
+	                      xVec.getZ(), yVec.getZ(), zVec.getZ(), from.getZ());
+	}
+	
 	
 	// From Rahel Lüthy : https://netzwerg.ch/blog/2015/03/22/javafx-3d-line/
     public Cylinder createLine(Point3D origin, Point3D target) {
