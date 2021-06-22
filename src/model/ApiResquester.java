@@ -205,8 +205,7 @@ public abstract class ApiResquester {
 			jsonOccurrence= readJsonObjectFromUrl("https://api.obis.org/v3/taxon/"+newScientificName);
 		}catch(Exception e) {
 			e.printStackTrace();
-		}
-		
+		}	
 
 		return jsonOccurrence;
 	}

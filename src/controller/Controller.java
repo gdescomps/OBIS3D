@@ -73,9 +73,9 @@ public class Controller {
 				zoneString+="["+point.getX()+", "+point.getY()+"]"; 
 			}
 			
-			data.add(new ZoneEntry(""+zoneReport.getOccurenceCount(), zoneString));
+			data.add(new ZoneEntry(""+zoneReport.getOccurrenceCount(), zoneString));
 			
-			System.out.println(""+zoneReport.getOccurenceCount()+" "+zoneString);
+			System.out.println(""+zoneReport.getOccurrenceCount()+" "+zoneString);
 		}
 		
 		

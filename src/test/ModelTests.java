@@ -11,7 +11,6 @@ import java.io.IOException;
 //import java.time.Period;
 //import java.util.ArrayList;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +21,11 @@ import org.json.JSONArray;
 //import org.json.JSONObject;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
-
+import org.json.JSONObject;
 
 import model.Model;
 import model.Occurrence;
+import model.Species;
 import model.ZoneReport;
 //import model.ApiResquester;
 //import model.GlobalReport;
@@ -203,11 +203,12 @@ class ModelTests {
 	void testGlobalReport() throws Exception {
 		Model model = new Model();
 		GlobalReport globalReport = model.getExhaustiveReport("Delphinidae");
-		ZoneReport zoneReport = globalReport.getZoneReport().get(0);
+		ZoneReport zoneReport = globalReport.getZoneReport().get(1);
 		//Test of the values of the global report
-		if(globalReport.getMaxOccurrences()!=8147) { 
+		System.out.println(globalReport.getMaxOccurrences());
+		System.out.println(globalReport);
+		if(globalReport.getMaxOccurrences()!=95609) { 
 			fail("maxOccurence is wrong");			
-
 		}else if(globalReport.getMinOccurrences()!=1) {
 			fail("minOccurence is wrong");			
 		}
@@ -216,9 +217,10 @@ class ModelTests {
 		}
 		else if(globalReport.getZoneReport().size()<=0) { //if there is no zone
 			fail("There is no zone");
-		}else if(zoneReport.getOccurrenceCount()!=8147) {
+		}else if(zoneReport.getOccurrenceCount()!=41021) {
+			//Test of the second value 
 			fail("First occurrence count is wrong");
-		}else if(zoneReport.getZone().get(0).getX()!=-80.15625 || zoneReport.getZone().get(0).getY()!=32.34375) {
+		}else if(zoneReport.getZone().get(0).getX()!=-45.0 || zoneReport.getZone().get(0).getY()!=0.0) {
 			fail("First zone coordinate is wrong");
 		}
 	} // valid� 8
@@ -229,35 +231,44 @@ class ModelTests {
 	void testGetOccurrencesDetails() {
 		Model model = new Model();
 		//Test of a request with name and geohash passed in parameter
-		ArrayList<Occurrence> occurrences = model.getOccurrencesDetails("Delphinidae", "spd");
+		ArrayList<Occurrence> occurrences = model.getOccurrencesDetails("Manta birostris", "spd");
 		//Test of the first element
-		if(!occurrences.get(0).getOrder().equals("Cetartiodactyla")) {
+		System.out.println("bath = " + occurrences.get(0).getBathymetry());
+		if(!occurrences.get(0).getOrder().equals("Myliobatiformes")) {
 			fail("the order is wrong");
 		};
-		if(!occurrences.get(0).getSuperclass().equals("Tetrapoda")) {
+		if(!occurrences.get(0).getSuperclass().equals("Pisces")) {
 			fail("the superclass is wrong");
 		};
-		if(!occurrences.get(0).getRecordedBy().equals("Taxon recorded as \"Stenella coeruleoalba\" by the provider")) {
+		if(!occurrences.get(0).getRecordedBy().equals("morgados")) {
 			fail("the recordedby is wrong");
 		};
-		if(!occurrences.get(0).getSpecies().getScientificName().equals("Stenella coeruleoalba")) {
+		if(!occurrences.get(0).getSpecies().getScientificName().equals("Mobula birostris")) {
 			fail("the name is wrong");
 		};
 		
+		//if(occurrences.get(0).getBathymetry()!=37.8) {
+		if(Float.compare(occurrences.get(0).getBathymetry(),(float) 37.8)==0) {
+			System.out.println("bath = " + occurrences.get(0).getBathymetry());
+			fail("the bathymetry is wrong");
+		};
+//		if(!occurrences.get(0).getEventDate("")) {
+//			
+//		}
+		if(occurrences.get(0).getShoredistance()!=1321) {
+			fail("the shore distance is wrong");
+		}
 		//Test of a request without name passed in parameter
-		ArrayList<Occurrence> otherOccurrences = model.getOccurrencesDetails("", "spp");
+		ArrayList<String> otherOccurrences = model.getScientificNamesByGeoHash("spp");
 		//Test values of the third element
-		if(!otherOccurrences.get(2).getOrder().equals("Myliobatiformes")) {
-			fail("the order is wrong");
-		};
-		if(!otherOccurrences.get(2).getSuperclass().equals("Pisces")) {
-			fail("the superclass is wrong");
-		};
-		if(!otherOccurrences.get(2).getRecordedBy().equals("Taxon recorded as \"Giant devil ray\" by the provider")) {
-			fail("the recordedby is wrong");
-		};
-		if(!otherOccurrences.get(2).getSpecies().getScientificName().equals("Mobula mobular")) {
-			fail("the name is wrong");
+		if(!otherOccurrences.get(0).equals("Globigerina bulloides")){
+			fail("the first name is wrong");
+		}
+		if(!otherOccurrences.get(1).equals("Agrenocythere pliocenica")){
+			fail("the second name is wrong");
+		}
+		if(!otherOccurrences.get(2).equals("Mobula mobular")) {
+			fail("the third name is wrong");
 		};
 	} // valid� 9
 	

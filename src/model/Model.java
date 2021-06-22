@@ -132,10 +132,13 @@ public class Model {
 				occurrence.setSuperclass(element.getString("superclass"));
 			}
 			if(element.has("bathymetry")) {
+				occurrence.setBathymetry(element.getFloat("bathymetry"));
 				
 			}if(element.has("shoredistance")) {
+				occurrence.setShoredistance(element.getInt("shoredistance"));
 				
 			}if(element.has("eventDate")) {
+				occurrence.setEventDate(element.getString("eventDate"));
 				
 			}	
 			occurrenceList.add(occurrence);
