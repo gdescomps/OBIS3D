@@ -83,7 +83,17 @@ class ModelTests {
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",1); //test name with space	
 		JSONArray result = jsonOccurrence.getJSONArray("features");
 		JSONObject firstElement = result.getJSONObject(0); //the first element
-		 assertEquals(firstElement.getString("type"),"Feature");
+		assertEquals(firstElement.getString("type"),"Feature");
+		JSONObject geometry = firstElement.getJSONObject("geometry");
+		assertEquals(geometry.getString("type"),"Polygon");	
+		JSONArray coordinates = geometry.getJSONArray("coordinates");
+		JSONArray subCoordinates = coordinates.getJSONArray(0);
+		JSONArray coordinates1 = subCoordinates.getJSONArray(0);
+		assertEquals(coordinates1.get(0),-45);  
+		assertEquals(coordinates1.get(1),45);  
+		JSONArray coordinates2 = subCoordinates.getJSONArray(1);
+		assertEquals(coordinates2.get(0),0); 
+		assertEquals(coordinates2.get(1),45); 
 	}  //valid� 1
 	
 	
@@ -111,13 +121,29 @@ class ModelTests {
 		}
 	}
 	
-	@DisplayName("Test getOccurrences per region for a species name and between two dates passed in parameter")
+	@Test
+	@DisplayName("Test for a species name and between two dates passed in parameter")
 	void testOccurencesOfSpeciesInRegionWithInterval() throws Exception {
 		//Test of https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23")
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3)); //test interval
 		JSONArray result = jsonOccurrence.getJSONArray("features");
 		JSONObject firstElement = result.getJSONObject(0); //the first element
-		assertEquals(firstElement.getString("type"),"Feature");		
+		assertEquals(firstElement.getString("type"),"Feature");	
+		JSONObject geometry = firstElement.getJSONObject("geometry");
+		assertEquals(geometry.getString("type"),"Polygon");	
+		JSONArray coordinates = geometry.getJSONArray("coordinates");
+		JSONArray subCoordinates = coordinates.getJSONArray(0);
+		JSONArray coordinates1 = subCoordinates.getJSONArray(0);
+//		System.out.println(coordinates1.get(0).getClass());
+//		System.out.println(coordinates1.get(1));
+//		assertEquals(coordinates1.get(0),-78.75);  
+//		if(!coordinates1.get(1).equals(39.375f)) {
+//			fail("fail");
+//		};  
+//		JSONArray coordinates2 = subCoordinates.getJSONArray(1);
+//		assertEquals(coordinates2.get(0),-67.5); 
+//		assertEquals(coordinates2.get(1),39.375); 
+
 	} // valid� 2
 	
 	
@@ -126,6 +152,7 @@ class ModelTests {
 	void testOccurencesOfSpeciesWithSameGeoHash() throws Exception {
 		//test of https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd"
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus","spd"); 
+		assertEquals(jsonOccurrence.getInt("total"),198);
 		JSONArray result = jsonOccurrence.getJSONArray("results");
 		JSONObject secondElement = result.getJSONObject(1); 
 		//Test some value of the second element
@@ -205,8 +232,6 @@ class ModelTests {
 		GlobalReport globalReport = model.getExhaustiveReport("Delphinidae");
 		ZoneReport zoneReport = globalReport.getZoneReport().get(1);
 		//Test of the values of the global report
-		System.out.println(globalReport.getMaxOccurrences());
-		System.out.println(globalReport);
 		if(globalReport.getMaxOccurrences()!=95609) { 
 			fail("maxOccurence is wrong");			
 		}else if(globalReport.getMinOccurrences()!=1) {
@@ -232,30 +257,27 @@ class ModelTests {
 		Model model = new Model();
 		//Test of a request with name and geohash passed in parameter
 		ArrayList<Occurrence> occurrences = model.getOccurrencesDetails("Manta birostris", "spd");
-		//Test of the first element
-		System.out.println("bath = " + occurrences.get(0).getBathymetry());
-		if(!occurrences.get(0).getOrder().equals("Myliobatiformes")) {
+		//Test of the second element
+		if(!occurrences.get(1).getOrder().equals("Myliobatiformes")) {
 			fail("the order is wrong");
 		};
-		if(!occurrences.get(0).getSuperclass().equals("Pisces")) {
+		if(!occurrences.get(1).getSuperclass().equals("Pisces")) {
 			fail("the superclass is wrong");
 		};
-		if(!occurrences.get(0).getRecordedBy().equals("morgados")) {
+		if(!occurrences.get(1).getRecordedBy().equals("morgados")) {
 			fail("the recordedby is wrong");
 		};
-		if(!occurrences.get(0).getSpecies().getScientificName().equals("Mobula birostris")) {
+		//
+		if(!occurrences.get(1).getSpecies().getScientificName().equals("Mobula birostris")) {
 			fail("the name is wrong");
-		};
-		
-		//if(occurrences.get(0).getBathymetry()!=37.8) {
-		if(Float.compare(occurrences.get(0).getBathymetry(),(float) 37.8)==0) {
-			System.out.println("bath = " + occurrences.get(0).getBathymetry());
+		};	
+		if(occurrences.get(1).getBathymetry()!=37.2f) {
 			fail("the bathymetry is wrong");
 		};
-//		if(!occurrences.get(0).getEventDate("")) {
-//			
-//		}
-		if(occurrences.get(0).getShoredistance()!=1321) {
+		if(!occurrences.get(1).getEventDate().equals("1987-07-02T12:00:00Z")) {
+			fail("the event date is wrong");
+		}
+		if(occurrences.get(1).getShoredistance()!=1283) {
 			fail("the shore distance is wrong");
 		}
 		//Test of a request without name passed in parameter

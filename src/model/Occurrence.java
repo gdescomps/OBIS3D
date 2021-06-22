@@ -5,7 +5,7 @@ public class Occurrence {
 	private String order="unknown";
 	private String superClass="unknown";
 	private String recordedBy="unknown";
-	private Species species;
+	private Species species=null;
 	private float bathymetry=-1;
 	private int shoredistance=-1;
 	private String eventDate="unknown";
@@ -70,7 +70,7 @@ public class Occurrence {
 	
 	@Override
 	public String toString() {
-		return "\nOrder = " + getOrder() +"\nSuper class = " + getSuperclass() + "\nRecorded by = " +getRecordedBy() + getSpecies() +"\n";
+		return "\nOrder = " + getOrder() +"\nSuper class = " + getSuperclass() + "\nRecorded by = " +getRecordedBy() + getSpecies() + "\nBathymetry = " + bathymetry +"\nShore distance = "+shoredistance+ "\nEvent date = "+ eventDate + "\n";
 	}
 
 	/**
