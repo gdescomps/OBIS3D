@@ -52,10 +52,7 @@ public class Controller {
 	}
 
 
-	public ObservableList<ZoneEntry> getExhaustiveReport() {
-		
-		
-		final ObservableList<ZoneEntry> data = FXCollections.observableArrayList();
+	public GlobalReport getExhaustiveReport() {
 		
 		GlobalReport globalReport = null;
 		
@@ -65,21 +62,8 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
-		for (ZoneReport zoneReport : globalReport.getZoneReports()) {
-			
-			String zoneString = "";
-			
-			for (Point2D point : zoneReport.getZone()) {
-				zoneString+="["+point.getX()+", "+point.getY()+"]"; 
-			}
-			
-			data.add(new ZoneEntry(""+zoneReport.getOccurrenceCount(), zoneString));
-			
-//			System.out.println(""+zoneReport.getOccurrenceCount()+" "+zoneString);
-		}
-		
-		
-		return data;
+		return globalReport;
+	
 	}
 	
 	
