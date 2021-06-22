@@ -135,10 +135,7 @@ public class Model {
 				occurrence.setSuperclass(element.getString("superclass"));
 			}
 			if(element.has("bathymetry")) {
-				//System.out.println("ok bath = "+element.getFloat("bathymetry"));
-				occurrence.setBathymetry(element.getFloat("bathymetry"));
-				//System.out.println(occurrence);
-				
+				occurrence.setBathymetry(element.getFloat("bathymetry"));				
 			}if(element.has("shoredistance")) {
 				occurrence.setShoredistance(element.getInt("shoredistance"));
 				
@@ -146,10 +143,8 @@ public class Model {
 				occurrence.setEventDate(element.getString("eventDate"));
 				
 			}	
-			//System.out.println("///////"+occurrence);
 			occurrenceList.add(occurrence);
 		}
-		//System.out.println("///////"+occurrenceList);
 		return occurrenceList;
 	}
 	
@@ -262,25 +257,6 @@ public class Model {
 		
 	}
 
-	public static void main(String[] args) throws Exception {
-		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",1); //test name with space	
-		JSONArray result = jsonOccurrence.getJSONArray("features");
-		JSONObject firstElement = result.getJSONObject(0); //the first element
-		System.out.println(firstElement.getString("type"));//"Feature");
-		JSONObject geometry = firstElement.getJSONObject("geometry");
-		System.out.println((geometry.getString("type"))); 
-		//"Polygon");	
-		JSONArray coordinates = geometry.getJSONArray("coordinates");
-		JSONArray coordinates2 = coordinates.getJSONArray(0);
-		
-		JSONArray coordinates3 = coordinates2.getJSONArray(0);
-		System.out.println(coordinates3.get(0)); //-45
-		System.out.println(coordinates3.get(1)); //45
-		
-		JSONArray coordinates4 = coordinates2.getJSONArray(1);
-		System.out.println(coordinates4.get(0)); //0
-		System.out.println(coordinates4.get(1)); //45
-	}
 }
 
 

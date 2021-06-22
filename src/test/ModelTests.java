@@ -10,6 +10,7 @@ import java.io.IOException;
 //import java.time.LocalDateTime;
 //import java.time.Period;
 //import java.util.ArrayList;
+import java.math.BigDecimal;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -134,15 +135,11 @@ class ModelTests {
 		JSONArray coordinates = geometry.getJSONArray("coordinates");
 		JSONArray subCoordinates = coordinates.getJSONArray(0);
 		JSONArray coordinates1 = subCoordinates.getJSONArray(0);
-//		System.out.println(coordinates1.get(0).getClass());
-//		System.out.println(coordinates1.get(1));
-//		assertEquals(coordinates1.get(0),-78.75);  
-//		if(!coordinates1.get(1).equals(39.375f)) {
-//			fail("fail");
-//		};  
-//		JSONArray coordinates2 = subCoordinates.getJSONArray(1);
-//		assertEquals(coordinates2.get(0),-67.5); 
-//		assertEquals(coordinates2.get(1),39.375); 
+		assertEquals(coordinates1.get(0),(new BigDecimal(""+-78.75+"")));
+		assertEquals(coordinates1.get(1), (new BigDecimal(""+39.375f+"")));  
+		JSONArray coordinates2 = subCoordinates.getJSONArray(1);
+		assertEquals(coordinates2.get(0),(new BigDecimal(""+-67.5+"")));
+		assertEquals(coordinates2.get(1),(new BigDecimal(""+39.375+"")));
 
 	} // valid� 2
 	
