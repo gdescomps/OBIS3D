@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.GlobalReport;
 import model.Model;
+import model.Occurrence;
 import model.Species;
 import model.ZoneReport;
 import view.MainWindowController;
@@ -165,6 +166,14 @@ public class Controller {
 	public void getSpeciesInGeohash(String geohash) {
 		ArrayList<String> speciesNames = this.getModel().getScientificNamesByGeoHash(geohash);
 		this.getMainView().displaySpeciesNames(speciesNames);
+	}
+
+
+	public void getOccurrencesDetails(String geohash) {
+		ArrayList<Occurrence> occurences = this.getModel().getOccurrencesDetails(this.getSelectedSpecies().getScientificName(), geohash);
+		
+		this.getMainView().displayOccurrences(occurences);
+		
 	}
 	
 	

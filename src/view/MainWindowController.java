@@ -50,6 +50,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import model.GlobalReport;
+import model.Occurrence;
 import model.ZoneReport;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
@@ -209,7 +210,12 @@ public class MainWindowController  extends View implements Initializable{
 			if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
 				PickResult pickResult = event.getPickResult();
 				Point3D spaceCoord = pickResult.getIntersectedPoint();
-				globeClicked(spaceCoord);
+				globeClicked(spaceCoord, true, false);
+			}
+			else if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isShiftDown()) {
+				PickResult pickResult = event.getPickResult();
+				Point3D spaceCoord = pickResult.getIntersectedPoint();
+				globeClicked(spaceCoord, false, true);
 			}
 		});
 		
@@ -228,11 +234,14 @@ public class MainWindowController  extends View implements Initializable{
 		
 	}
 	
-	private void globeClicked(Point3D spaceCoord) {
+	private void globeClicked(Point3D spaceCoord, boolean alt, boolean shift) {
 		javafx.geometry.Point2D coord = spaceCoordToGeoCoord(spaceCoord);
 		Location location = new Location("", coord.getX(), coord.getY());
 		System.out.println(GeoHashHelper.getGeohash(location, getGeohashPrecision()));
-		this.getController().getSpeciesInGeohash(GeoHashHelper.getGeohash(location, getGeohashPrecision()));
+		if(alt)
+			this.getController().getSpeciesInGeohash(GeoHashHelper.getGeohash(location, getGeohashPrecision()));
+		else if(shift)
+			this.getController().getOccurrencesDetails(GeoHashHelper.getGeohash(location, getGeohashPrecision()));
 	}
 	
 
@@ -709,6 +718,44 @@ public class MainWindowController  extends View implements Initializable{
     		speciesNameField.setText(((ScientificNameEntry)table.getSelectionModel().getSelectedItem()).getScientificName());
     		
     	});
+	}
+
+	public void displayOccurrences(ArrayList<Occurrence> occurrences) {
+		
+		table.getColumns().clear();
+		
+		table.setEditable(false);
+		 
+        TableColumn<OccurrenceEntry, String> orderCol = new TableColumn<OccurrenceEntry, String>("Order");
+        TableColumn<OccurrenceEntry, String> superclassCol = new TableColumn<OccurrenceEntry, String>("Superclass");
+        TableColumn<OccurrenceEntry, String> bathymetryCol = new TableColumn<OccurrenceEntry, String>("Bathymetry");
+        TableColumn<OccurrenceEntry, String> shoreDistanceCol = new TableColumn<OccurrenceEntry, String>("Shore distance");
+        TableColumn<OccurrenceEntry, String> recordedByCol = new TableColumn<OccurrenceEntry, String>("Recorded by");
+        TableColumn<OccurrenceEntry, String> dateCol = new TableColumn<OccurrenceEntry, String>("Date");
+        
+        ObservableList<OccurrenceEntry> data = FXCollections.observableArrayList();
+        
+        for (Occurrence occurrence : occurrences) {
+			
+			
+			data.add(new OccurrenceEntry(occurrence.getOrder(), occurrence.getSuperclass(), occurrence.getBathymetry()+"", occurrence.getShoredistance()+"", occurrence.getRecordedBy(), occurrence.getEventDate()));
+			
+//			System.out.println(""+zoneReport.getOccurrenceCount()+" "+zoneString);
+		}
+        
+        
+        table.setItems(data);
+        
+        orderCol.setCellValueFactory(new PropertyValueFactory<>("order"));
+        superclassCol.setCellValueFactory(new PropertyValueFactory<>("superclass"));
+        bathymetryCol.setCellValueFactory(new PropertyValueFactory<>("bathymetry"));
+        shoreDistanceCol.setCellValueFactory(new PropertyValueFactory<>("shoreDistance"));
+        recordedByCol.setCellValueFactory(new PropertyValueFactory<>("recordedBy"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        
+        table.getColumns().addAll(orderCol,superclassCol, bathymetryCol, shoreDistanceCol, recordedByCol, dateCol);
+		
+		
 	}
 
 }
