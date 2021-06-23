@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import model.GlobalReport;
 import model.Model;
 import model.ZoneReport;
+import view.MainWindowController;
 import view.View;
 import view.ZoneEntry;
 
@@ -42,7 +43,14 @@ public class Controller {
 	public View getView() {
 		return view;
 	}
-
+	
+	/**
+	 * @return the view with a cast to MainWindowController
+	 */
+	public MainWindowController getMainView() {
+		return (MainWindowController) view;
+	}
+	
 
 	/**
 	 * @param view the view to set
@@ -65,6 +73,20 @@ public class Controller {
 		return globalReport;
 	
 	}
+
+
+	public void selectSpecies(String speciesName) {
+		GlobalReport globalReport = null;
+		
+		try {
+			globalReport = this.getModel().getExhaustiveReport(speciesName);
+			this.getMainView().displayGlobalReport(globalReport);
+		} catch (Exception e) {
+			this.getMainView().wrongSpeciesName();
+		}
+				
+	}
+	
 	
 	
 	

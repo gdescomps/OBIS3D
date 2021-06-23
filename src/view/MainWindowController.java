@@ -193,6 +193,18 @@ public class MainWindowController  extends View implements Initializable{
 		
 		setViewPropertiesState(false);
 		setAnimationControlsState(false);
+		
+		setupEvents();
+		
+	}
+	
+	private void setupEvents() {
+		
+		selectButton.setOnAction(event ->  
+    	{
+    		System.out.println("Select species "+speciesNameField.getText());
+    		this.getController().selectSpecies(speciesNameField.getText());
+        });
 	}
 	
 	private void setAnimationControlsState(boolean enabled) {
@@ -270,6 +282,11 @@ public class MainWindowController  extends View implements Initializable{
         
 	}
 	
+	public void displayGlobalReport(GlobalReport globalReport) {
+		displayReportOnGlobe(globalReport);
+		speciesStatus.setText(globalReport.getSpecies().getScientificName());
+		setViewPropertiesState(true);
+	}
 	
 	private void displayReportOnGlobe(GlobalReport globalReport) {
 		float max = globalReport.getMaxOccurences();
@@ -499,4 +516,9 @@ public class MainWindowController  extends View implements Initializable{
         
         parent.getChildren().add(city);
     }
+
+	public void wrongSpeciesName() {
+		speciesStatus.setText("Scientific name not found.");
+		setViewPropertiesState(false);
+	}
 }

@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.GlobalReport;
 
 public class View {
 	
@@ -50,7 +51,6 @@ public class View {
 		this.controller = controller;
 		this.controller.setView(this);
 	}
-	
-	
+
 
 }
