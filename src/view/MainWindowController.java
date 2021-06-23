@@ -173,7 +173,7 @@ public class MainWindowController  extends View implements Initializable{
         SubScene subscene = new SubScene(root3D,0,0,true,SceneAntialiasing.BALANCED);
 		
 		subscene.setCamera(camera);
-		subscene.setFill(Color.GREY);
+		subscene.setFill(Color.web("#3b3b3b"));
 		
 		viewPane.getChildren().addAll(subscene);
 		
@@ -328,107 +328,97 @@ public class MainWindowController  extends View implements Initializable{
 		
 		float max = globalReport.getMaxOccurences();
         
+		float zoneNumber = globalReport.getZoneReports().size();
+		float zoneCount = globalReport.getZoneReports().size();
 		
         for (ZoneReport zoneReport : globalReport.getZoneReports()) {
 			PhongMaterial material = new PhongMaterial();
 			
-			float colorCoeff = zoneReport.getOccurrenceCount()/globalReport.getMaxOccurences();
+			float colorCoeff = zoneNumber/zoneCount;
+			zoneNumber--;
+			
 			float occurenceCount = zoneReport.getOccurrenceCount();
+						
+//			System.out.println(occurenceCount+" "+colorCoeff+" "+zoneNumber+" "+zoneCount);
 			
-//			Logarithmic color scale : 
-//			occurenceCount 	-> colorCoeff
-//
-//			max     		-> 1
-//			max/2   		-> 0.8
-//			max/2^2 		-> 0.6
-//			max/2^3 		-> 0.4
-//			max/2^4 		-> 0.2
-			for (int n = 4; n >= 0; n--) {
-				if(occurenceCount < max / Math.pow(2,n)) {
+			
+			material.setDiffuseColor(getColor(colorCoeff).deriveColor(0, 1, 1, 0.2));
+			
+			float offset=1.18f;
+			switch (this.getGeohashPrecision()) {
+			case 1:
+				offset=1.18f;
+				break;
+			case 2:
+				offset=1.05f;
+				break;
+			case 3:
+				offset=1.02f;
+				break;
+			case 4:
+				offset=1.01f;
+				break;
 
-					float a = (float) (0.2f/ (max/Math.pow(2,n)));
-					float x = (float) (occurenceCount - (max/Math.pow(2,n)));
-					float b = 1f-(0.2f*n);
-					
-					colorCoeff = a*x+b;
-					
-					break;
-				}
+			default:
+				break;
 			}
-
-			
-//			System.out.println(occurenceCount+" "+colorCoeff);
-			
-			
-			material.setDiffuseColor(getColor(colorCoeff).deriveColor(1, 1, 1, 0.2));
 			
 			addQuadrilateral(zonesDisplay, 
 					geoCoordTo3dCoord(zoneReport.getZone().get(0)), 
 					geoCoordTo3dCoord(zoneReport.getZone().get(1)), 
 					geoCoordTo3dCoord(zoneReport.getZone().get(2)), 
 					geoCoordTo3dCoord(zoneReport.getZone().get(3)), 
-					material);
+					material,
+					offset
+					);
 		}
         
-        updateLegend(max);
+        int[] legendText = new int[10];
+        
+        for (int i = 0; i < 10; i++) {
+        	int zoneI = (int) (i/10f*zoneCount);
+        	
+			legendText[i]=globalReport.getZoneReports().get(zoneI).getOccurrenceCount();
+			System.out.println(zoneI+" "+legendText[i]);
+		}
+        
+        updateLegend(max, legendText);
 
 	}
 	
-	private void updateLegend(float max) {
+	private void updateLegend(float max, int[] legendText) {
+		
+		int colorBoxHeight = 20;
 		
 		legend.getChildren().clear();
-        
-	//      Rectangle background = new Rectangle(100,100,Color.color(1,1,1,0.2));
 	      
-	      Text t = new Text(10, 15, "Legend");
-	      t.setFont(new Font(13));
+		Text t = new Text(10, 15, "Legend");
+		t.setFont(new Font(13));
+		  
+		legend.getChildren().addAll(t);
 	      
-	      legend.getChildren().addAll(t);
-	      
-	//		max     -> 1
-	//		max/2   -> 0.8
-	//		max/2^2 -> 0.6
-	//		max/2^3 -> 0.4
-	//		max/2^4 -> 0.2
-	      for (int n = 0; n <= 4; n++) {
-	      	Rectangle colorBox = new Rectangle(35,12, getColor(1f-(0.2f*n)));
-	      	colorBox.relocate(10,12*n+20);
+		// Add colors
+		for(int color = 9; color>=0; color--) {
+			Rectangle colorBox = new Rectangle(25,colorBoxHeight, getColor(color*0.1f));
+	      	colorBox.relocate(10,colorBoxHeight*(10-color)+10);
+	      	legend.getChildren().add(colorBox);
+		}
+		
+		// Add numbers
+		for (int i = 0; i < 10; i++) {
+			Text elementText = new Text(11, 15, legendText[i]+"");
+			elementText.setFont(new Font(12));
+			elementText.relocate(37,colorBoxHeight*i+25);
 	      	
-	      	Text elementText = new Text(11, 15, new DecimalFormat("#").format(max/Math.pow(2,n)));
-	          elementText.setFont(new Font(12));
-	          elementText.relocate(50,12*n+20);
-	      	
-	          legend.getChildren().addAll(colorBox, elementText);
-	      }
-	      int i=0;
-	      for(float x=0.01f; x>0.001; x=x-0.002f) {
-	      	
-	      
-		        float a = (float) (0.2f/ (max/Math.pow(2,4)));
-				float c = (float) (max/Math.pow(2,4));
-				float b = 1f-(0.2f*4);
-				float occurenceCount = (x - b) / a + c;
-				
-				Rectangle colorBox = new Rectangle(35,12, getColor(x));
-		    	colorBox.relocate(10,12*i+12*5+20);
-		    	
-		    	Text elementText = new Text(11, 15, new DecimalFormat("#").format(occurenceCount));
-		        elementText.setFont(new Font(12));
-		        elementText.relocate(50,12*i+12*5+20);
-		    	
-		        legend.getChildren().addAll(colorBox, elementText);
-		    	
-		    	i++;
-	      }
-	      
-	      Rectangle colorBox = new Rectangle(35,12, getColor(0));
-	  	colorBox.relocate(10,12*i+12*5+20);
-	  	
-	  	Text elementText = new Text(11, 15, "~0");
-	      elementText.setFont(new Font(12));
-	      elementText.relocate(50,12*i+12*5+20);
-	  	
-	      legend.getChildren().addAll(colorBox, elementText);
+	        legend.getChildren().add(elementText);
+		}
+		
+		Text elementText = new Text(11, 15, "0");
+		elementText.setFont(new Font(12));
+		elementText.relocate(37,colorBoxHeight*10+25);
+      	
+        legend.getChildren().add(elementText);
+	
 	}
 	
 	private void addBar(Group root3d2, double latitude, double longitude) {
@@ -450,11 +440,32 @@ public class MainWindowController  extends View implements Initializable{
 	
 	
 	private Color getColor(float colorCoeff) {
-		float redCoeff = colorCoeff > 0.01 ? colorCoeff : 0;
-		float greenCoeff = colorCoeff <= 0.01 ? 1-colorCoeff*100 : 0;
-		float blueCoeff = colorCoeff > 0.01 ? 1-colorCoeff : 0.2f; 
 		
-		return Color.color(redCoeff, greenCoeff, blueCoeff);
+		Color color = null;
+		
+		if(colorCoeff>=0.9f)
+			color = Color.web("#ff0000");
+		else if(colorCoeff>=0.8f)
+			color = Color.web("#e86700");
+		else if(colorCoeff>=0.7f)
+			color = Color.web("#d88500");
+		else if(colorCoeff>=0.6f)
+			color = Color.web("#c39f00");
+		else if(colorCoeff>=0.5f)
+			color = Color.web("#adb41c");
+		else if(colorCoeff>=0.4f)
+			color = Color.web("#94c748");
+		else if(colorCoeff>=0.3f)
+			color = Color.web("#79d873");
+		else if(colorCoeff>=0.2f)
+			color = Color.web("#58e69f");
+		else if(colorCoeff>=0.1f)
+			color = Color.web("#30f3ca");
+		else
+			color = Color.web("#00fff9");
+		
+		return color.deriveColor(0, 1, 0.8, 1);
+		
 	}
 	
 	private static Affine lookAt(Point3D from, Point3D to, Point3D ydir) {
@@ -502,9 +513,8 @@ public class MainWindowController  extends View implements Initializable{
         return geoCoordTo3dCoord(point.getX(), point.getY());
     }
     
-    private void addQuadrilateral(Group parent, Point3D bottomLeft, Point3D topLeft, Point3D topRight, Point3D bottomRight, PhongMaterial material) {
+    private void addQuadrilateral(Group parent, Point3D bottomLeft, Point3D topLeft, Point3D topRight, Point3D bottomRight, PhongMaterial material, float offset) {
     	
-    	float offset = 1.18f;
     	
     	final TriangleMesh triangleMesh = new TriangleMesh();
     	
