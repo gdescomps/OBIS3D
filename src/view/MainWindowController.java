@@ -4,7 +4,14 @@ import java.awt.geom.Point2D;
 import java.awt.image.ColorConvertOp;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.Timer;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
@@ -31,6 +38,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -62,6 +71,17 @@ public class MainWindowController  extends View implements Initializable{
     private Group root3D;
     private Group legend;
     
+    private int animationState;
+    
+    private ArrayList<GlobalReport> animationReportList;
+    
+    private int animationReportIndex;
+    
+    private Timer animationTimer = new Timer(1000,  (e) -> {
+		this.displayGlobalReport(getAnimationReportList().get(animationReportIndex));
+		animationReportIndex=(animationReportIndex >= getAnimationReportList().size() ? 0 : animationReportIndex+1);
+	});
+    
     private int geohashPrecision;
 	
 	
@@ -80,10 +100,7 @@ public class MainWindowController  extends View implements Initializable{
 	private TableView table;
 	
 	// Animation controls
-	
-	@FXML
-	private Slider animationDateSlider;
-	
+		
 	@FXML
 	private Label animationBeginDateLabel;
 	
@@ -188,6 +205,13 @@ public class MainWindowController  extends View implements Initializable{
 		subscene.widthProperty().bind(viewPane.widthProperty());
 		subscene.setManaged(false);
 		
+		subscene.addEventHandler(MouseEvent.ANY, event -> {
+			if(event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown()) {
+				PickResult pickResult = event.getPickResult();
+				Point3D spaceCoord = pickResult.getIntersectedPoint();
+				globeClicked(spaceCoord);
+			}
+		});
 		
 		startReport();
 		
@@ -200,8 +224,19 @@ public class MainWindowController  extends View implements Initializable{
 		
 		setupEvents();
 		
+		setAnimationState(0);
+		
 	}
 	
+	private void globeClicked(Point3D spaceCoord) {
+		javafx.geometry.Point2D coord = spaceCoordToGeoCoord(spaceCoord);
+		Location location = new Location("", coord.getX(), coord.getY());
+		System.out.println(GeoHashHelper.getGeohash(location, getGeohashPrecision()));
+		this.getController().getSpeciesInGeohash(GeoHashHelper.getGeohash(location, getGeohashPrecision()));
+	}
+	
+
+
 	private void setupEvents() {
 		
 		selectButton.setOnAction(event ->  
@@ -216,6 +251,17 @@ public class MainWindowController  extends View implements Initializable{
     		this.getController().parameterizedReport(geohashPrecision, beginDatePicker.getValue(), endDatePicker.getValue());
         });
 		
+		playButton.setOnAction(event ->  
+    	{
+    		System.out.println("Play");
+    		
+    		if(getAnimationState()==0) {
+    			setAnimationState(1);
+    			this.getController().getReportsForAnimation(geohashPrecision, beginDatePicker.getValue(), endDatePicker.getValue());
+    		}
+    		
+        });
+		
 		precisionSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
@@ -223,8 +269,38 @@ public class MainWindowController  extends View implements Initializable{
             }
         });
 		
+		
+		
 	}
 	
+	/**
+	 * @return the animationState
+	 */
+	public int getAnimationState() {
+		return animationState;
+	}
+
+	/**
+	 * @param animationState the animationState to set
+	 */
+	public void setAnimationState(int animationState) {
+		this.animationState = animationState;
+	}
+
+	/**
+	 * @return the animationReportList
+	 */
+	public ArrayList<GlobalReport> getAnimationReportList() {
+		return animationReportList;
+	}
+
+	/**
+	 * @param animationReportList the animationReportList to set
+	 */
+	public void setAnimationReportList(ArrayList<GlobalReport> animationReportList) {
+		this.animationReportList = animationReportList;
+	}
+
 	/**
 	 * @return the geohashPrecision
 	 */
@@ -240,10 +316,8 @@ public class MainWindowController  extends View implements Initializable{
 		geohashPrecisionLabel.setText("Geohash Precision : " + geohashPrecision);
 	}
 	
-	private void setAnimationControlsState(boolean enabled) {
+	public void setAnimationControlsState(boolean enabled) {
 		boolean disable = !enabled;
-		
-		animationDateSlider.setDisable(disable);
 		
 		animationBeginDateLabel.setText("");
 		animationBeginDateLabel.setDisable(disable);
@@ -256,6 +330,10 @@ public class MainWindowController  extends View implements Initializable{
 		pauseButton.setDisable(disable);
 		
 		stopButton.setDisable(disable);
+	}
+	
+	public void setPlayable() {
+		playButton.setDisable(false);
 	}
 	
 	private void setViewPropertiesState(boolean enabled) {
@@ -379,7 +457,7 @@ public class MainWindowController  extends View implements Initializable{
         	int zoneI = (int) (i/10f*zoneCount);
         	
 			legendText[i]=globalReport.getZoneReports().get(zoneI).getOccurrenceCount();
-			System.out.println(zoneI+" "+legendText[i]);
+//			System.out.println(zoneI+" "+legendText[i]);
 		}
         
         updateLegend(max, legendText);
@@ -568,4 +646,69 @@ public class MainWindowController  extends View implements Initializable{
 		speciesStatus.setText("Scientific name not found.");
 		setViewPropertiesState(false);
 	}
+
+	public void animate(ArrayList<GlobalReport> globalReportList, LocalDate beginDate, int periodCount) {
+		setAnimationReportList(globalReportList);
+//		this.animationBeginDateLabel.setText(beginDate+"");
+//		this.animationEndDateLabel.setText(beginDate.plusYears(periodCount*5)+"");
+		animationPlay();
+
+	}
+
+	private void animationPlay() {
+		
+		this.setAnimationState(2);
+		
+		animationTimer.start();
+
+	}
+	
+	public static Point3D geoCoordToSpaceCoord(Point2D latlon) { 
+		  double lat_cor = Math.toRadians(latlon.getX() + TEXTURE_LAT_OFFSET);
+		  double lon_cor = Math.toRadians(latlon.getY() + TEXTURE_LON_OFFSET);
+
+		  return new Point3D(
+		    -Math.sin(lon_cor) * Math.cos(lat_cor),
+		    -Math.sin(lat_cor),
+		     Math.cos(lon_cor) * Math.cos(lat_cor));
+		}
+
+	public static javafx.geometry.Point2D spaceCoordToGeoCoord(Point3D p) {    
+		  double lat = Math.PI/2.0 - Math.acos(-p.getY());
+		  double lon = -Math.atan2(p.getX(), p.getZ());
+	  return new javafx.geometry.Point2D(Math.toDegrees(lat) - TEXTURE_LAT_OFFSET, Math.toDegrees(lon) - TEXTURE_LON_OFFSET);
+	}
+
+	public void displaySpeciesNames(ArrayList<String> speciesNames) {
+		table.getColumns().clear();
+	
+		table.setEditable(false);
+		 
+        TableColumn<ScientificNameEntry, String> scientificNamesCol = new TableColumn<ScientificNameEntry, String>("Scientific Name");
+              
+        
+        ObservableList<ScientificNameEntry> data = FXCollections.observableArrayList();
+        
+        for (String speciesName : speciesNames) {
+			
+			
+			data.add(new ScientificNameEntry(speciesName));
+			
+//			System.out.println(""+zoneReport.getOccurrenceCount()+" "+zoneString);
+		}
+        
+        
+        table.setItems(data);
+        
+        scientificNamesCol.setCellValueFactory(new PropertyValueFactory<>("scientificName"));
+        
+        table.getColumns().add(scientificNamesCol);
+		table.setOnMouseClicked(event ->  
+    	{
+    		System.out.println( ((ScientificNameEntry)table.getSelectionModel().getSelectedItem()).getScientificName());
+    		speciesNameField.setText(((ScientificNameEntry)table.getSelectionModel().getSelectedItem()).getScientificName());
+    		
+    	});
+	}
+
 }

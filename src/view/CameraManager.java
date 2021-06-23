@@ -123,13 +123,13 @@ public class CameraManager {
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
                     case ALT:
-                        cameraXform2.setTranslateX(0.0);
-                        cameraXform2.setTranslateY(0.0);
-
-                        camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
-
-                        ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
-                        rx.setAngle(CAMERA_INITIAL_X_ANGLE);
+//                        cameraXform2.setTranslateX(0.0);
+//                        cameraXform2.setTranslateY(0.0);
+//
+//                        camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
+//
+//                        ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
+//                        rx.setAngle(CAMERA_INITIAL_X_ANGLE);
                         break;
                     default:
 

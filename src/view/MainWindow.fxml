@@ -29,11 +29,6 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Separator>
-                  <Slider fx:id="animationDateSlider">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Slider>
                   <HBox>
                      <children>
                         <Label fx:id="animationBeginDateLabel" text="2/12/2019">

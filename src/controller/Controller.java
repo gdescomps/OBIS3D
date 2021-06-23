@@ -107,6 +107,7 @@ public class Controller {
 			globalReport = this.getModel().getExhaustiveReport(speciesName);
 			this.setSelectedSpecies(globalReport.getSpecies());
 			this.getMainView().displayGlobalReport(globalReport);
+			this.getMainView().setAnimationControlsState(false);
 		} catch (Exception e) {
 			this.getMainView().wrongSpeciesName();
 		}
@@ -135,7 +136,35 @@ public class Controller {
 				);
 		
 		this.getMainView().displayGlobalReport(globalReportList.get(0));
+		this.getMainView().setPlayable();
+	}
+
+
+	public void getReportsForAnimation(int geohashPrecision, LocalDate beginDate, LocalDate endDate) {
+		if(beginDate == null)
+			beginDate=LocalDate.EPOCH;
 		
+		if(endDate==null)
+			endDate=LocalDate.now();
+		
+		Period period = Period.ofYears(5);
+		
+		int periodCount = ( endDate.getYear() - beginDate.getYear() ) / 5;
+		
+		ArrayList<GlobalReport> globalReportList = this.getModel().getZoneReportsbyTimePeriods(
+				this.getSelectedSpecies().getScientificName(), 
+				geohashPrecision, 
+				beginDate.atStartOfDay(), 
+				period, 
+				periodCount
+				);
+		this.getMainView().animate(globalReportList, beginDate, periodCount);
+	}
+
+
+	public void getSpeciesInGeohash(String geohash) {
+		ArrayList<String> speciesNames = this.getModel().getScientificNamesByGeoHash(geohash);
+		this.getMainView().displaySpeciesNames(speciesNames);
 	}
 	
 	
