@@ -107,13 +107,7 @@ public class MainWindowController  extends View implements Initializable{
 	
 	@FXML
 	private Label speciesStatus;
-	
-	@FXML
-	private TextField latitudeField;
-	
-	@FXML
-	private TextField longitudeField;
-	
+		
 	@FXML
 	private Slider precisionSlider;
 	
@@ -121,11 +115,8 @@ public class MainWindowController  extends View implements Initializable{
 	private DatePicker beginDatePicker;
 	
 	@FXML
-	private DatePicker intervalPicker;
-	
-	@FXML
-	private TextField intervalCountField;
-	
+	private DatePicker endDatePicker;
+		
 	@FXML
 	private Button viewButton;
 	
@@ -205,6 +196,7 @@ public class MainWindowController  extends View implements Initializable{
     		System.out.println("Select species "+speciesNameField.getText());
     		this.getController().selectSpecies(speciesNameField.getText());
         });
+		
 	}
 	
 	private void setAnimationControlsState(boolean enabled) {
@@ -228,17 +220,11 @@ public class MainWindowController  extends View implements Initializable{
 	private void setViewPropertiesState(boolean enabled) {
 		boolean disable = !enabled;
 		
-		latitudeField.setDisable(disable);
-		
-		longitudeField.setDisable(disable);
-		
 		precisionSlider.setDisable(disable);
 		
 		beginDatePicker.setDisable(disable);
 		
-		intervalPicker.setDisable(disable);
-		
-		intervalCountField.setDisable(disable);
+		endDatePicker.setDisable(disable);
 		
 		viewButton.setDisable(disable);
 	}

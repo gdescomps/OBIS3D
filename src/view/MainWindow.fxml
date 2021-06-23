@@ -139,20 +139,6 @@
                      </VBox.margin>
                   </Separator>
                   <Label text="Zone" />
-                  <HBox>
-                     <children>
-                        <TextField fx:id="latitudeField" promptText="Latitude">
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </HBox.margin>
-                        </TextField>
-                        <TextField fx:id="longitudeField" promptText="Longitude">
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </HBox.margin>
-                        </TextField>
-                     </children>
-                  </HBox>
                   <Label text="Geohash Precision">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -174,26 +160,16 @@
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </DatePicker>
-                  <Label text="Interval">
+                  <Label text="End date">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <DatePicker fx:id="intervalPicker">
+                  <DatePicker fx:id="endDatePicker">
                      <VBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </DatePicker>
-                  <Label text="Interval count">
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <TextField fx:id="intervalCountField" text="3">
-                     <VBox.margin>
-                        <Insets left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </TextField>
                   <Pane VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
