@@ -21,8 +21,13 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -68,6 +73,62 @@ public class MainWindowController  extends View implements Initializable{
 	@FXML
 	private TableView table;
 	
+	// Animation controls
+	
+	@FXML
+	private Slider animationDateSlider;
+	
+	@FXML
+	private Label animationBeginDateLabel;
+	
+	@FXML
+	private Label animationEndDateLabel;
+	
+	@FXML
+	private Button playButton;
+	
+	@FXML
+	private Button pauseButton;
+	
+	@FXML
+	private Button stopButton;
+	
+	
+	// View Properties
+	
+	@FXML
+	private TextField speciesNameField;
+	
+	@FXML
+	private Button searchButton;
+	
+	@FXML
+	private Button selectButton;
+	
+	@FXML
+	private Label speciesStatus;
+	
+	@FXML
+	private TextField latitudeField;
+	
+	@FXML
+	private TextField longitudeField;
+	
+	@FXML
+	private Slider precisionSlider;
+	
+	@FXML
+	private DatePicker beginDatePicker;
+	
+	@FXML
+	private DatePicker intervalPicker;
+	
+	@FXML
+	private TextField intervalCountField;
+	
+	@FXML
+	private Button viewButton;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
@@ -91,7 +152,6 @@ public class MainWindowController  extends View implements Initializable{
         root3D.getChildren().add(earth);
         root3D.setFocusTraversable(true);
         
-
         //Add a camera group
         PerspectiveCamera camera = new PerspectiveCamera(true);
         new CameraManager(camera, viewPane, root3D);
@@ -131,6 +191,44 @@ public class MainWindowController  extends View implements Initializable{
 		
 //		addBar(root3D, 45,45);
 		
+		setViewPropertiesState(false);
+		setAnimationControlsState(false);
+	}
+	
+	private void setAnimationControlsState(boolean enabled) {
+		boolean disable = !enabled;
+		
+		animationDateSlider.setDisable(disable);
+		
+		animationBeginDateLabel.setText("");
+		animationBeginDateLabel.setDisable(disable);
+		
+		animationEndDateLabel.setText("");
+		animationEndDateLabel.setDisable(disable);
+		
+		playButton.setDisable(disable);
+		
+		pauseButton.setDisable(disable);
+		
+		stopButton.setDisable(disable);
+	}
+	
+	private void setViewPropertiesState(boolean enabled) {
+		boolean disable = !enabled;
+		
+		latitudeField.setDisable(disable);
+		
+		longitudeField.setDisable(disable);
+		
+		precisionSlider.setDisable(disable);
+		
+		beginDatePicker.setDisable(disable);
+		
+		intervalPicker.setDisable(disable);
+		
+		intervalCountField.setDisable(disable);
+		
+		viewButton.setDisable(disable);
 	}
 	
 	public void startReport() {

@@ -2,10 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -95,16 +95,44 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField promptText="Species Name">
+                  <TextField fx:id="speciesNameField" promptText="Species Name">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <Pane>
+                  <HBox>
                      <children>
-                        <Button fx:id="searchButton" alignment="CENTER_RIGHT" layoutX="128.0" mnemonicParsing="false" text="Search" />
+                        <Pane HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Pane>
+                        <Button fx:id="searchButton" mnemonicParsing="false" text="Search">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="selectButton" defaultButton="true" layoutX="146.0" layoutY="15.0" mnemonicParsing="false" text="Select">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
                      </children>
-                  </Pane>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Pane HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Pane>
+                        <Label fx:id="speciesStatus" text="Delphinidae (local)">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
                   <Separator prefWidth="200.0">
                      <VBox.margin>
                         <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
@@ -113,12 +141,12 @@
                   <Label text="Zone" />
                   <HBox>
                      <children>
-                        <TextField promptText="Latitude">
+                        <TextField fx:id="latitudeField" promptText="Latitude">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
                         </TextField>
-                        <TextField promptText="Longitude">
+                        <TextField fx:id="longitudeField" promptText="Longitude">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
@@ -130,11 +158,42 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <Slider fx:id="precisionSlider" showTickLabels="true" showTickMarks="true">
+                  <Slider fx:id="precisionSlider" majorTickUnit="10.0" max="30.0" minorTickCount="10" showTickLabels="true" showTickMarks="true">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Slider>
+                  <Separator prefWidth="200.0" />
+                  <Label text="Begin date">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <DatePicker fx:id="beginDatePicker">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </DatePicker>
+                  <Label text="Interval">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <DatePicker fx:id="intervalPicker">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </DatePicker>
+                  <Label text="Interval count">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="intervalCountField" text="3">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
                   <Pane VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
@@ -143,7 +202,7 @@
                               <Insets />
                            </HBox.margin>
                         </Pane>
-                        <Button mnemonicParsing="false" text="Button">
+                        <Button fx:id="viewButton" defaultButton="true" mnemonicParsing="false" text="View">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
