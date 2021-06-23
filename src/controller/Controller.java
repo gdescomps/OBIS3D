@@ -86,6 +86,9 @@ public class Controller {
 	}
 
 
+	/** Get initial exhaustive report and display it
+	 * @return
+	 */
 	public GlobalReport getExhaustiveReport() {
 		
 		GlobalReport globalReport = null;
@@ -101,6 +104,9 @@ public class Controller {
 	}
 
 
+	/** Get the report for the provided speciesName
+	 * @param speciesName
+	 */
 	public void selectSpecies(String speciesName) {
 		GlobalReport globalReport = null;
 		
@@ -116,6 +122,11 @@ public class Controller {
 	}
 
 
+	/** Get the report for the selected species with occurrences between beginDate and endDate and zones with geohashPrecision
+	 * @param geohashPrecision
+	 * @param beginDate
+	 * @param endDate
+	 */
 	public void parameterizedReport(int geohashPrecision, LocalDate beginDate, LocalDate endDate) {
 		
 		if(beginDate == null)
@@ -141,6 +152,11 @@ public class Controller {
 	}
 
 
+	/** Get all reports between beginDate and endDate with a period of 5 years
+	 * @param geohashPrecision
+	 * @param beginDate
+	 * @param endDate
+	 */
 	public void getReportsForAnimation(int geohashPrecision, LocalDate beginDate, LocalDate endDate) {
 		if(beginDate == null)
 			beginDate=LocalDate.EPOCH;
@@ -163,12 +179,18 @@ public class Controller {
 	}
 
 
+	/** Get species found in geohash zone
+	 * @param geohash
+	 */
 	public void getSpeciesInGeohash(String geohash) {
 		ArrayList<String> speciesNames = this.getModel().getScientificNamesByGeoHash(geohash);
 		this.getMainView().displaySpeciesNames(speciesNames);
 	}
 
 
+	/** Get occurrences details inside geohash zone
+	 * @param geohash
+	 */
 	public void getOccurrencesDetails(String geohash) {
 		ArrayList<Occurrence> occurences = this.getModel().getOccurrencesDetails(this.getSelectedSpecies().getScientificName(), geohash);
 		

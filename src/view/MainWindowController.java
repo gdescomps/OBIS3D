@@ -1,15 +1,10 @@
 package view;
 
 import java.awt.geom.Point2D;
-import java.awt.image.ColorConvertOp;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.Timer;
 
@@ -86,6 +81,10 @@ public class MainWindowController  extends View implements Initializable{
     private int geohashPrecision;
 	
 	
+	/** Create a MainWindowController instance
+	 * @param controller
+	 * @param primaryStage
+	 */
 	public MainWindowController(Controller controller, Stage primaryStage) {
 		super(controller, primaryStage);
 	}
@@ -147,6 +146,9 @@ public class MainWindowController  extends View implements Initializable{
 	@FXML
 	private Button viewButton;
 	
+	/**
+	 * Initialize the interface
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
@@ -234,6 +236,11 @@ public class MainWindowController  extends View implements Initializable{
 		
 	}
 	
+	/** A click occured on the globe
+	 * @param spaceCoord
+	 * @param alt was pressed
+	 * @param shift was pressed
+	 */
 	private void globeClicked(Point3D spaceCoord, boolean alt, boolean shift) {
 		javafx.geometry.Point2D coord = spaceCoordToGeoCoord(spaceCoord);
 		Location location = new Location("", coord.getX(), coord.getY());
@@ -246,6 +253,9 @@ public class MainWindowController  extends View implements Initializable{
 	
 
 
+	/**
+	 * Setup actions to do on events
+	 */
 	private void setupEvents() {
 		
 		selectButton.setOnAction(event ->  
@@ -325,6 +335,9 @@ public class MainWindowController  extends View implements Initializable{
 		geohashPrecisionLabel.setText("Geohash Precision : " + geohashPrecision);
 	}
 	
+	/** Set the enable state of animation controls
+	 * @param enabled
+	 */
 	public void setAnimationControlsState(boolean enabled) {
 		boolean disable = !enabled;
 		
@@ -345,6 +358,9 @@ public class MainWindowController  extends View implements Initializable{
 		playButton.setDisable(false);
 	}
 	
+	/** Change the enable state of View Properties
+	 * @param enabled
+	 */
 	private void setViewPropertiesState(boolean enabled) {
 		boolean disable = !enabled;
 		
@@ -357,6 +373,9 @@ public class MainWindowController  extends View implements Initializable{
 		viewButton.setDisable(disable);
 	}
 	
+	/**
+	 * Initialize the interface with local report
+	 */
 	public void startReport() {
 		
 		GlobalReport globalReport = this.getController().getExhaustiveReport();
@@ -369,6 +388,9 @@ public class MainWindowController  extends View implements Initializable{
 		setGeohashPrecision(1);
 	}
 	
+	/** Update table with report zone informations
+	 * @param globalReport
+	 */
 	private void updateTableWithReport(GlobalReport globalReport) {
 		table.getColumns().clear();
 		
@@ -403,6 +425,9 @@ public class MainWindowController  extends View implements Initializable{
         table.getColumns().addAll(occurenceCountCol, zonePointsCol);
 	}
 	
+	/** Display the report on the interface
+	 * @param globalReport
+	 */
 	public void displayGlobalReport(GlobalReport globalReport) {
 		displayReportOnGlobe(globalReport);
 		updateTableWithReport(globalReport);
@@ -410,6 +435,9 @@ public class MainWindowController  extends View implements Initializable{
 		setViewPropertiesState(true);
 	}
 	
+	/** Update the informations on the globe according to the report
+	 * @param globalReport
+	 */
 	private void displayReportOnGlobe(GlobalReport globalReport) {
 		zonesDisplay.getChildren().clear();
 		
@@ -473,6 +501,10 @@ public class MainWindowController  extends View implements Initializable{
 
 	}
 	
+	/** Update the legend
+	 * @param max
+	 * @param legendText
+	 */
 	private void updateLegend(float max, int[] legendText) {
 		
 		int colorBoxHeight = 20;
@@ -508,7 +540,13 @@ public class MainWindowController  extends View implements Initializable{
 	
 	}
 	
-	private void addBar(Group root3d2, double latitude, double longitude) {
+	
+	/**
+	 * @param parent
+	 * @param latitude
+	 * @param longitude
+	 */
+	private void addBar(Group parent, double latitude, double longitude) {
 				
 		Point3D from = geoCoordTo3dCoord(latitude, longitude);
 		Box box = new Box(0.01f,0.01f,1f);
@@ -522,10 +560,14 @@ public class MainWindowController  extends View implements Initializable{
 		group.getTransforms().setAll(affine); 
 		group.getChildren().addAll(box);
 
-		root3d2.getChildren().addAll(group);
+		parent.getChildren().addAll(group);
 	}
 	
 	
+	/** Get the color corresponding to the color coefficient
+	 * @param colorCoeff
+	 * @return
+	 */
 	private Color getColor(float colorCoeff) {
 		
 		Color color = null;
@@ -555,6 +597,12 @@ public class MainWindowController  extends View implements Initializable{
 		
 	}
 	
+	/**
+	 * @param from
+	 * @param to
+	 * @param ydir
+	 * @return
+	 */
 	private static Affine lookAt(Point3D from, Point3D to, Point3D ydir) {
 	    Point3D zVec = to.subtract(from).normalize();
 	    Point3D xVec = ydir.normalize().crossProduct(zVec).normalize();
@@ -585,6 +633,11 @@ public class MainWindowController  extends View implements Initializable{
         return line;
     }
 
+    /** Get 3D coordinates from geo coordinates
+     * @param lat
+     * @param lon
+     * @return
+     */
     public static Point3D geoCoordTo3dCoord(double lat, double lon) {
         double lat_cor = lat + TEXTURE_LAT_OFFSET;
         double lon_cor = lon + TEXTURE_LON_OFFSET;
@@ -596,10 +649,23 @@ public class MainWindowController  extends View implements Initializable{
                         * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)));
     }
     
+    /** Get 3D coordinates from geo coordinates
+     * @param point
+     * @return
+     */
     public static Point3D geoCoordTo3dCoord(Point2D point) {
         return geoCoordTo3dCoord(point.getX(), point.getY());
     }
     
+    /** Add a quadrilateral to parent according to provided properties
+     * @param parent
+     * @param bottomLeft
+     * @param topLeft
+     * @param topRight
+     * @param bottomRight
+     * @param material
+     * @param offset distance from the globe
+     */
     private void addQuadrilateral(Group parent, Point3D bottomLeft, Point3D topLeft, Point3D topRight, Point3D bottomRight, PhongMaterial material, float offset) {
     	
     	
@@ -636,6 +702,11 @@ public class MainWindowController  extends View implements Initializable{
     }
 	
     
+    /** Add a point at provided position
+     * @param parent
+     * @param position
+     * @param material
+     */
     private void addPoint(Group parent, Point3D position, PhongMaterial material) {
     	Sphere citySphere = new Sphere(0.01);
         
@@ -651,6 +722,9 @@ public class MainWindowController  extends View implements Initializable{
         parent.getChildren().add(city);
     }
 
+	/**
+	 * Notify user a wrong name has been submitted
+	 */
 	public void wrongSpeciesName() {
 		speciesStatus.setText("Scientific name not found.");
 		setViewPropertiesState(false);
@@ -672,22 +746,20 @@ public class MainWindowController  extends View implements Initializable{
 
 	}
 	
-	public static Point3D geoCoordToSpaceCoord(Point2D latlon) { 
-		  double lat_cor = Math.toRadians(latlon.getX() + TEXTURE_LAT_OFFSET);
-		  double lon_cor = Math.toRadians(latlon.getY() + TEXTURE_LON_OFFSET);
-
-		  return new Point3D(
-		    -Math.sin(lon_cor) * Math.cos(lat_cor),
-		    -Math.sin(lat_cor),
-		     Math.cos(lon_cor) * Math.cos(lat_cor));
-		}
-
+	
+	/** Get geo coordinates from 3D coordinates
+	 * @param p
+	 * @return
+	 */
 	public static javafx.geometry.Point2D spaceCoordToGeoCoord(Point3D p) {    
 		  double lat = Math.PI/2.0 - Math.acos(-p.getY());
 		  double lon = -Math.atan2(p.getX(), p.getZ());
 	  return new javafx.geometry.Point2D(Math.toDegrees(lat) - TEXTURE_LAT_OFFSET, Math.toDegrees(lon) - TEXTURE_LON_OFFSET);
 	}
 
+	/** Display provided speciesNames inside the table
+	 * @param speciesNames
+	 */
 	public void displaySpeciesNames(ArrayList<String> speciesNames) {
 		table.getColumns().clear();
 	
@@ -720,6 +792,9 @@ public class MainWindowController  extends View implements Initializable{
     	});
 	}
 
+	/** Display provided occurences inside the table
+	 * @param occurrences
+	 */
 	public void displayOccurrences(ArrayList<Occurrence> occurrences) {
 		
 		table.getColumns().clear();
@@ -736,11 +811,9 @@ public class MainWindowController  extends View implements Initializable{
         ObservableList<OccurrenceEntry> data = FXCollections.observableArrayList();
         
         for (Occurrence occurrence : occurrences) {
-			
-			
+						
 			data.add(new OccurrenceEntry(occurrence.getOrder(), occurrence.getSuperclass(), occurrence.getBathymetry()+"", occurrence.getShoredistance()+"", occurrence.getRecordedBy(), occurrence.getEventDate()));
 			
-//			System.out.println(""+zoneReport.getOccurrenceCount()+" "+zoneString);
 		}
         
         
