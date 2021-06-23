@@ -1,6 +1,8 @@
 package model;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -118,8 +120,9 @@ public class Model {
 			species = new Species(result.getJSONObject(0).getString("scientificName"));
 		}
 		Occurrence occurrence = new Occurrence();
-		occurrence.setSpecies(species);
 		for(int i=0;i<result.length();i++) { 
+			occurrence = new Occurrence();
+			occurrence.setSpecies(species);
 			JSONObject element = result.getJSONObject(i); 
 			
 			if(element.has("order")) {
@@ -132,10 +135,12 @@ public class Model {
 				occurrence.setSuperclass(element.getString("superclass"));
 			}
 			if(element.has("bathymetry")) {
-				
+				occurrence.setBathymetry(element.getFloat("bathymetry"));				
 			}if(element.has("shoredistance")) {
+				occurrence.setShoredistance(element.getInt("shoredistance"));
 				
 			}if(element.has("eventDate")) {
+				occurrence.setEventDate(element.getString("eventDate"));
 				
 			}	
 			occurrenceList.add(occurrence);

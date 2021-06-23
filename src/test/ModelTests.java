@@ -10,8 +10,8 @@ import java.io.IOException;
 //import java.time.LocalDateTime;
 //import java.time.Period;
 //import java.util.ArrayList;
+import java.math.BigDecimal;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +22,11 @@ import org.json.JSONArray;
 //import org.json.JSONObject;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
-
+import org.json.JSONObject;
 
 import model.Model;
 import model.Occurrence;
+import model.Species;
 import model.ZoneReport;
 //import model.ApiResquester;
 //import model.GlobalReport;
@@ -83,7 +84,17 @@ class ModelTests {
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",1); //test name with space	
 		JSONArray result = jsonOccurrence.getJSONArray("features");
 		JSONObject firstElement = result.getJSONObject(0); //the first element
-		 assertEquals(firstElement.getString("type"),"Feature");
+		assertEquals(firstElement.getString("type"),"Feature");
+		JSONObject geometry = firstElement.getJSONObject("geometry");
+		assertEquals(geometry.getString("type"),"Polygon");	
+		JSONArray coordinates = geometry.getJSONArray("coordinates");
+		JSONArray subCoordinates = coordinates.getJSONArray(0);
+		JSONArray coordinates1 = subCoordinates.getJSONArray(0);
+		assertEquals(coordinates1.get(0),-45);  
+		assertEquals(coordinates1.get(1),45);  
+		JSONArray coordinates2 = subCoordinates.getJSONArray(1);
+		assertEquals(coordinates2.get(0),0); 
+		assertEquals(coordinates2.get(1),45); 
 	}  //valid� 1
 	
 	
@@ -111,13 +122,25 @@ class ModelTests {
 		}
 	}
 	
-	@DisplayName("Test getOccurrences per region for a species name and between two dates passed in parameter")
+	@Test
+	@DisplayName("Test for a species name and between two dates passed in parameter")
 	void testOccurencesOfSpeciesInRegionWithInterval() throws Exception {
 		//Test of https://api.obis.org/v3/occurrence/grid/2?scientificname=Morus%20bassanus&startdate=2015-04-13&enddate=2018-01-23")
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus",2, LocalDateTime.of(2015, 04, 13,0,0), Period.of(3, 01, 3)); //test interval
 		JSONArray result = jsonOccurrence.getJSONArray("features");
 		JSONObject firstElement = result.getJSONObject(0); //the first element
-		assertEquals(firstElement.getString("type"),"Feature");		
+		assertEquals(firstElement.getString("type"),"Feature");	
+		JSONObject geometry = firstElement.getJSONObject("geometry");
+		assertEquals(geometry.getString("type"),"Polygon");	
+		JSONArray coordinates = geometry.getJSONArray("coordinates");
+		JSONArray subCoordinates = coordinates.getJSONArray(0);
+		JSONArray coordinates1 = subCoordinates.getJSONArray(0);
+		assertEquals(coordinates1.get(0),(new BigDecimal(""+-78.75+"")));
+		assertEquals(coordinates1.get(1), (new BigDecimal(""+39.375f+"")));  
+		JSONArray coordinates2 = subCoordinates.getJSONArray(1);
+		assertEquals(coordinates2.get(0),(new BigDecimal(""+-67.5+"")));
+		assertEquals(coordinates2.get(1),(new BigDecimal(""+39.375+"")));
+
 	} // valid� 2
 	
 	
@@ -126,6 +149,7 @@ class ModelTests {
 	void testOccurencesOfSpeciesWithSameGeoHash() throws Exception {
 		//test of https://api.obis.org/v3/occurrence?scientificname=Morus%20bassanus&geometry=spd"
 		JSONObject jsonOccurrence = ApiResquester.getOccurrences("Morus bassanus","spd"); 
+		assertEquals(jsonOccurrence.getInt("total"),198);
 		JSONArray result = jsonOccurrence.getJSONArray("results");
 		JSONObject secondElement = result.getJSONObject(1); 
 		//Test some value of the second element
@@ -203,11 +227,10 @@ class ModelTests {
 	void testGlobalReport() throws Exception {
 		Model model = new Model();
 		GlobalReport globalReport = model.getExhaustiveReport("Delphinidae");
-		ZoneReport zoneReport = globalReport.getZoneReport().get(0);
+		ZoneReport zoneReport = globalReport.getZoneReport().get(1);
 		//Test of the values of the global report
-		if(globalReport.getMaxOccurrences()!=8147) { 
+		if(globalReport.getMaxOccurrences()!=95609) { 
 			fail("maxOccurence is wrong");			
-
 		}else if(globalReport.getMinOccurrences()!=1) {
 			fail("minOccurence is wrong");			
 		}
@@ -216,9 +239,10 @@ class ModelTests {
 		}
 		else if(globalReport.getZoneReport().size()<=0) { //if there is no zone
 			fail("There is no zone");
-		}else if(zoneReport.getOccurrenceCount()!=8147) {
+		}else if(zoneReport.getOccurrenceCount()!=41021) {
+			//Test of the second value 
 			fail("First occurrence count is wrong");
-		}else if(zoneReport.getZone().get(0).getX()!=-80.15625 || zoneReport.getZone().get(0).getY()!=32.34375) {
+		}else if(zoneReport.getZone().get(0).getX()!=-45.0 || zoneReport.getZone().get(0).getY()!=0.0) {
 			fail("First zone coordinate is wrong");
 		}
 	} // valid� 8
@@ -229,35 +253,41 @@ class ModelTests {
 	void testGetOccurrencesDetails() {
 		Model model = new Model();
 		//Test of a request with name and geohash passed in parameter
-		ArrayList<Occurrence> occurrences = model.getOccurrencesDetails("Delphinidae", "spd");
-		//Test of the first element
-		if(!occurrences.get(0).getOrder().equals("Cetartiodactyla")) {
+		ArrayList<Occurrence> occurrences = model.getOccurrencesDetails("Manta birostris", "spd");
+		//Test of the second element
+		if(!occurrences.get(1).getOrder().equals("Myliobatiformes")) {
 			fail("the order is wrong");
 		};
-		if(!occurrences.get(0).getSuperclass().equals("Tetrapoda")) {
+		if(!occurrences.get(1).getSuperclass().equals("Pisces")) {
 			fail("the superclass is wrong");
 		};
-		if(!occurrences.get(0).getRecordedBy().equals("Taxon recorded as \"Stenella coeruleoalba\" by the provider")) {
+		if(!occurrences.get(1).getRecordedBy().equals("morgados")) {
 			fail("the recordedby is wrong");
 		};
-		if(!occurrences.get(0).getSpecies().getScientificName().equals("Stenella coeruleoalba")) {
+		//
+		if(!occurrences.get(1).getSpecies().getScientificName().equals("Mobula birostris")) {
 			fail("the name is wrong");
+		};	
+		if(occurrences.get(1).getBathymetry()!=37.2f) {
+			fail("the bathymetry is wrong");
 		};
-		
+		if(!occurrences.get(1).getEventDate().equals("1987-07-02T12:00:00Z")) {
+			fail("the event date is wrong");
+		}
+		if(occurrences.get(1).getShoredistance()!=1283) {
+			fail("the shore distance is wrong");
+		}
 		//Test of a request without name passed in parameter
-		ArrayList<Occurrence> otherOccurrences = model.getOccurrencesDetails("", "spp");
+		ArrayList<String> otherOccurrences = model.getScientificNamesByGeoHash("spp");
 		//Test values of the third element
-		if(!otherOccurrences.get(2).getOrder().equals("Myliobatiformes")) {
-			fail("the order is wrong");
-		};
-		if(!otherOccurrences.get(2).getSuperclass().equals("Pisces")) {
-			fail("the superclass is wrong");
-		};
-		if(!otherOccurrences.get(2).getRecordedBy().equals("Taxon recorded as \"Giant devil ray\" by the provider")) {
-			fail("the recordedby is wrong");
-		};
-		if(!otherOccurrences.get(2).getSpecies().getScientificName().equals("Mobula mobular")) {
-			fail("the name is wrong");
+		if(!otherOccurrences.get(0).equals("Globigerina bulloides")){
+			fail("the first name is wrong");
+		}
+		if(!otherOccurrences.get(1).equals("Agrenocythere pliocenica")){
+			fail("the second name is wrong");
+		}
+		if(!otherOccurrences.get(2).equals("Mobula mobular")) {
+			fail("the third name is wrong");
 		};
 	} // valid� 9
 	
