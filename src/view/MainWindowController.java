@@ -10,6 +10,8 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import controller.Controller;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -56,8 +58,12 @@ public class MainWindowController  extends View implements Initializable{
     private static final float TEXTURE_LON_OFFSET = 2.8f;
     
     private Group earth;
+    private Group zonesDisplay;
     private Group root3D;
     private Group legend;
+    
+    private int geohashPrecision;
+	
 	
 	public MainWindowController(Controller controller, Stage primaryStage) {
 		super(controller, primaryStage);
@@ -108,6 +114,9 @@ public class MainWindowController  extends View implements Initializable{
 	@FXML
 	private Label speciesStatus;
 		
+	@FXML
+	private Label geohashPrecisionLabel;
+	
 	@FXML
 	private Slider precisionSlider;
 	
@@ -171,6 +180,8 @@ public class MainWindowController  extends View implements Initializable{
 		legend = new Group();
 		viewPane.getChildren().add(legend);
 		
+		zonesDisplay = new Group();
+		root3D.getChildren().add(zonesDisplay);
 		
 		// Resize the subscene according to viewPane size
 		subscene.heightProperty().bind(viewPane.heightProperty());
@@ -181,6 +192,8 @@ public class MainWindowController  extends View implements Initializable{
 		startReport();
 		
 //		addBar(root3D, 45,45);
+		
+		precisionSlider.setSnapToTicks(true);
 		
 		setViewPropertiesState(false);
 		setAnimationControlsState(false);
@@ -197,6 +210,34 @@ public class MainWindowController  extends View implements Initializable{
     		this.getController().selectSpecies(speciesNameField.getText());
         });
 		
+		viewButton.setOnAction(event ->  
+    	{
+    		System.out.println("View "+speciesNameField.getText());
+    		this.getController().parameterizedReport(geohashPrecision, beginDatePicker.getValue(), endDatePicker.getValue());
+        });
+		
+		precisionSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    setGeohashPrecision(new_val.intValue());
+            }
+        });
+		
+	}
+	
+	/**
+	 * @return the geohashPrecision
+	 */
+	public int getGeohashPrecision() {
+		return geohashPrecision;
+	}
+
+	/**
+	 * @param geohashPrecision the geohashPrecision to set
+	 */
+	public void setGeohashPrecision(int geohashPrecision) {
+		this.geohashPrecision = geohashPrecision;
+		geohashPrecisionLabel.setText("Geohash Precision : " + geohashPrecision);
 	}
 	
 	private void setAnimationControlsState(boolean enabled) {
@@ -230,12 +271,26 @@ public class MainWindowController  extends View implements Initializable{
 	}
 	
 	public void startReport() {
+		
+		GlobalReport globalReport = this.getController().getExhaustiveReport();
+              
+        displayGlobalReport(globalReport);
+        
+        speciesStatus.setText("Delphinidae (local file)");
+		setViewPropertiesState(false);
+        
+		setGeohashPrecision(1);
+	}
+	
+	private void updateTableWithReport(GlobalReport globalReport) {
+		table.getColumns().clear();
+		
 		table.setEditable(false);
 		 
         TableColumn<ZoneEntry, String> occurenceCountCol = new TableColumn<ZoneEntry, String>("Count");
         TableColumn<ZoneEntry, String> zonePointsCol = new TableColumn<ZoneEntry, String>("Zone");
         
-        GlobalReport globalReport = this.getController().getExhaustiveReport();
+        
         
         ObservableList<ZoneEntry> data = FXCollections.observableArrayList();
         
@@ -259,22 +314,18 @@ public class MainWindowController  extends View implements Initializable{
         zonePointsCol.setCellValueFactory(new PropertyValueFactory<>("zonePoints"));
         
         table.getColumns().addAll(occurenceCountCol, zonePointsCol);
-        
-        
-//        System.out.println(globalReport.getMinOccurrences()+" "+globalReport.getMaxOccurrences());
-//        System.out.println(globalReport.getZoneReports().size());
-        
-        displayReportOnGlobe(globalReport);
-        
 	}
 	
 	public void displayGlobalReport(GlobalReport globalReport) {
 		displayReportOnGlobe(globalReport);
+		updateTableWithReport(globalReport);
 		speciesStatus.setText(globalReport.getSpecies().getScientificName());
 		setViewPropertiesState(true);
 	}
 	
 	private void displayReportOnGlobe(GlobalReport globalReport) {
+		zonesDisplay.getChildren().clear();
+		
 		float max = globalReport.getMaxOccurences();
         
 		
@@ -311,7 +362,7 @@ public class MainWindowController  extends View implements Initializable{
 			
 			material.setDiffuseColor(getColor(colorCoeff).deriveColor(1, 1, 1, 0.2));
 			
-			addQuadrilateral(root3D, 
+			addQuadrilateral(zonesDisplay, 
 					geoCoordTo3dCoord(zoneReport.getZone().get(0)), 
 					geoCoordTo3dCoord(zoneReport.getZone().get(1)), 
 					geoCoordTo3dCoord(zoneReport.getZone().get(2)), 

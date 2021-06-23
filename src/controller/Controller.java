@@ -2,11 +2,17 @@ package controller;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Period;
+import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.GlobalReport;
 import model.Model;
+import model.Species;
 import model.ZoneReport;
 import view.MainWindowController;
 import view.View;
@@ -16,11 +22,30 @@ public class Controller {
 	
 	Model model;
 	View view;
+	
+	private Species selectedSpecies;
+	
 	public Controller() {
-
+		this.setSelectedSpecies(null);
 	}
 	
 	
+	/**
+	 * @return the selectedSpecies
+	 */
+	public Species getSelectedSpecies() {
+		return selectedSpecies;
+	}
+
+
+	/**
+	 * @param selectedSpecies the selectedSpecies to set
+	 */
+	public void setSelectedSpecies(Species selectedSpecies) {
+		this.selectedSpecies = selectedSpecies;
+	}
+
+
 	/**
 	 * @return the model
 	 */
@@ -80,11 +105,37 @@ public class Controller {
 		
 		try {
 			globalReport = this.getModel().getExhaustiveReport(speciesName);
+			this.setSelectedSpecies(globalReport.getSpecies());
 			this.getMainView().displayGlobalReport(globalReport);
 		} catch (Exception e) {
 			this.getMainView().wrongSpeciesName();
 		}
 				
+	}
+
+
+	public void parameterizedReport(int geohashPrecision, LocalDate beginDate, LocalDate endDate) {
+		
+		if(beginDate == null)
+			beginDate=LocalDate.EPOCH;
+		
+		if(endDate==null)
+			endDate=LocalDate.now();
+		
+//		System.out.println(geohashPrecision+" "+beginDate+" "+endDate);
+		
+		Period period = Period.between(beginDate, endDate);
+		
+		ArrayList<GlobalReport> globalReportList = this.getModel().getZoneReportsbyTimePeriods(
+				this.getSelectedSpecies().getScientificName(), 
+				geohashPrecision, 
+				beginDate.atStartOfDay(), 
+				period, 
+				1
+				);
+		
+		this.getMainView().displayGlobalReport(globalReportList.get(0));
+		
 	}
 	
 	
